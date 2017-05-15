@@ -43,8 +43,8 @@ def compValues(lh_root, rh_root, unionList):
     for union in unionList:
         lf = open(lh_root + union, 'rb')
         rf = open(rh_root + union, 'rb')
-        lLine = lf.readline()
-        rLine = rf.readline()
+        lLine = lf.xreadlines()
+        rLine = rf.xreadlines()
         while lLine or rLine:
             if lLine != rLine:
                 comp.append(union)
