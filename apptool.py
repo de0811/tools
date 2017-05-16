@@ -33,7 +33,14 @@ def Signer(target):
 if __name__ == "__main__":
 
     args = sys.argv[1:]
+    if args[0].strtswith('-'):
+        if args[0].endswith('s'):
+            Signer(target)
+            sys.exit()
+
+
     target = args[0]
+
     option = '''d'''
 
     print 'current target : ' + target

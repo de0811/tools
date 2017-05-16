@@ -28,7 +28,7 @@ def diffDirList(lh, rh):
                 break
     return unionList, coprimeList
 
-def compSize(lh_root, rh_root, unionList):
+def compSizes(lh_root, rh_root, unionList):
     comp = list()
     for union in unionList:
         if os.stat(lh_root + union)[stat.ST_SIZE] != os.stat(rh_root + union)[stat.ST_SIZE]:
@@ -51,18 +51,7 @@ def compValues(lh_root, rh_root, unionList):
             rLine = rf.readline()
     return comp
 
-
-if __name__ == "__main__":
-    args = sys.argv[1:]
-    print args
-    if not args:
-        print 'Not Command'
-        sys.exit()
-    if args[0].startswith('-'):
-        print 'not option'
-        sys.exit()
-    lh, rh = args[0], args[1]
-
+def diffDir(lh, rh):
     lh_list = getDirList(lh)
     rh_list = getDirList(rh)
 
@@ -70,15 +59,15 @@ if __name__ == "__main__":
     print 'lh_coprimeList'
     unionList, lh_coprimeList = diffDirList(lh_list, rh_list)
     for value in lh_coprimeList:
-        print value
+        print lh + value
+
     print '-------------------------------------------------------'
     print 'rh_coprimeList'
     unionList, rh_coprimeList = diffDirList(lh_list, rh_list)
     for value in rh_coprimeList:
-        print value
+        print rh + value
 	
-    compSize = compSize(lh, rh, unionList)
-
+    compSize = compSizes(lh, rh, unionList)
     print '-------------------------------------------------------'
     print 'compSize'
     #print 'compSize : ', compSize
@@ -91,11 +80,26 @@ if __name__ == "__main__":
     #print 'compValue : ', compValue
     for value in compValue:
         print value
-        pass
+
+def diffFile(lh, rh):
+    pass
 
 
+if __name__ == "__main__":
+    args = sys.argv[1:]
+    print args
+    if not args:
+        print 'Not Command'
+        sys.exit()
+    if args[0].startswith('-'):
+        print 'not option'
+        sys.exit()
+    lh, rh = args[0], args[1]
 
-
+    if os.path.isdir(lh) and os.path.isdir(rh):
+        diffDir(lh, rh)
+    elif os.path.isfile(lh) == True and os.isfile(rh) == True:
+        diffFile(lh, rh)
 
 
 
