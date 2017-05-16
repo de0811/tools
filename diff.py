@@ -7,8 +7,6 @@ def getDirList(dir):
     fList = list()
     for root, dirs, files in os.walk(dir):
         for fname in files:
-            print 'root : ', root
-            print 'dirs : ', dirs
             fullpath = os.path.join(root, fname)
             fList.append(fullpath[len(dir):])
     return fList
@@ -43,8 +41,8 @@ def compValues(lh_root, rh_root, unionList):
     for union in unionList:
         lf = open(lh_root + union, 'rb')
         rf = open(rh_root + union, 'rb')
-        lLine = lf.xreadlines()
-        rLine = rf.xreadlines()
+        lLine = lf.readline()
+        rLine = rf.readline()
         while lLine or rLine:
             if lLine != rLine:
                 comp.append(union)
@@ -68,16 +66,33 @@ if __name__ == "__main__":
     lh_list = getDirList(lh)
     rh_list = getDirList(rh)
 
+    print '-------------------------------------------------------'
+    print 'lh_coprimeList'
     unionList, lh_coprimeList = diffDirList(lh_list, rh_list)
+    for value in lh_coprimeList:
+        print value
+    print '-------------------------------------------------------'
+    print 'rh_coprimeList'
     unionList, rh_coprimeList = diffDirList(lh_list, rh_list)
-
+    for value in rh_coprimeList:
+        print value
+	
     compSize = compSize(lh, rh, unionList)
-    
-    print 'compSize : ', compSize
 
+    print '-------------------------------------------------------'
+    print 'compSize'
+    #print 'compSize : ', compSize
+    for value in compSize:
+        print value
+
+    print '-------------------------------------------------------'
+    print 'compValue'
     compValue = compValues(lh, rh, unionList)
-    print 'compValue : ', compValue
-    
+    #print 'compValue : ', compValue
+    for value in compValue:
+        print value
+        pass
+
 
 
 
