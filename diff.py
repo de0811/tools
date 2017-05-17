@@ -80,6 +80,9 @@ def diffDir(lh, rh):
     #print 'compValue : ', compValue
     for value in compValue:
         print value
+    print 'lh_list : ', len(lh_list), 'rh_list : ', len(rh_list)
+    print 'lh_coprime : ', len(lh_coprimeList), 'rh_coprime : ', len(rh_coprimeList)
+    print 'compSizes : ', len(compSize), 'compValues : ', len(compValue)
 
 def diffFile(lh, rh):
     pass

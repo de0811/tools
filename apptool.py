@@ -3,6 +3,7 @@ from subprocess import *
 import os
 import sys
 import shutil
+import config
 
 print "apktool.py runing"
 
@@ -13,18 +14,13 @@ def RunProcess(cmd):
     print pipe.stderr.read();
 
 def ApkDeCompile(option, target):
-    apktool = '''java -jar /home/numa/Android/utill/apktool.jar'''
-    cmd = apktool + " " + option + " " + target
+    
+    cmd = config.apktool + " " + option + " " + target
     print cmd
     RunProcess(cmd)
 
 def Signer(target):
-    signer = 'jarsigner -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore'
-    key = '/home/numa/Android/keystore/testsig.jks'
-    keyPass = '-storepass 123456'
-    alias = 'testsig'
-
-    cmd = signer + " " + key + " " + keyPass + " " + target + " " + alias
+    cmd = config.signer + " " + config.key + " " + config.keyPass + " " + target + " " + config.alias
     print cmd
     RunProcess(cmd)
 
@@ -33,8 +29,9 @@ def Signer(target):
 if __name__ == "__main__":
 
     args = sys.argv[1:]
-    if args[0].strtswith('-'):
+    if args[0].startswith('-'):
         if args[0].endswith('s'):
+            target = args[1]
             Signer(target)
             sys.exit()
 

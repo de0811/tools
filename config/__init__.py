@@ -1,0 +1,5 @@
+apktool = '''java -jar C:\\utill\\apktool.jar'''
+signer = '''jarsigner -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore'''
+key = '''C:\\utill\\keystore\\testsig.jks'''
+keyPass = '''-storepass 123456'''
+alias = '''testsig'''
