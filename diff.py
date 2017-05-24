@@ -43,6 +43,7 @@ def compValues(lh_root, rh_root, unionList):
         rf = open(rh_root + union, 'rb')
         lLine = lf.readline()
         rLine = rf.readline()
+        #print "comp line : ", lf, rf
         while lLine or rLine:
             if lLine != rLine:
                 comp.append(union)
@@ -63,7 +64,7 @@ def diffDir(lh, rh):
 
     print '-------------------------------------------------------'
     print 'rh_coprimeList'
-    unionList, rh_coprimeList = diffDirList(lh_list, rh_list)
+    unionList, rh_coprimeList = diffDirList(rh_list, lh_list)
     for value in rh_coprimeList:
         print rh + value
 	
