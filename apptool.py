@@ -9,12 +9,16 @@ print "apktool.py runing"
 
 def RunProcess(cmd):
     cmd_args = cmd.split()
-    pipe = Popen(cmd_args, stdout=PIPE, stderr=PIPE)
-    print pipe.stdout.read();
-    print pipe.stderr.read();
+    #pipe = Popen(cmd_args, stdout=PIPE, stderr=PIPE)
+    #print pipe.stdout.read();
+    #print pipe.stderr.read();
+    process = Popen(cmd_args)
+    while process.poll() is None:
+        pass
+        #print('working..')
+    print process.poll()
 
 def ApkDeCompile(option, target):
-    
     cmd = config.apktool + " " + option + " " + target
     print cmd
     RunProcess(cmd)
@@ -65,7 +69,8 @@ if __name__ == "__main__":
 
         apk = os.path.basename(target)
         apk = target + os.sep + 'dist' + os.sep + apk + '.apk'
-        Signer(apk)
+        if os.path.isfile(apk) :
+            Signer(apk)
 
 
 

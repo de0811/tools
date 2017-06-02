@@ -13,8 +13,8 @@ def sameData16(lf, rf):
     lfLine = lf.read(16)
     rfLine = rf.read(16)
     bResult = lfLine == rfLine
-    print "S : ", lf.tell(), rf.tell()
-    print "lfLn : ", lfLine, "rfLn : ", rfLine
+    #print "S : ", lf.tell(), rf.tell()
+    #print "lfLn : ", lfLine, "rfLn : ", rfLine
     lf.seek(lf.tell() - len(lfLine))
     rf.seek(rf.tell() - len(rfLine))
     print "E : ", lf.tell(), rf.tell()
@@ -105,6 +105,7 @@ def diffFile(lh, rh):
             print lf.tell(), rf.tell()
             lfDiffList.append(DiffPosition(lfStmp, lf.tell()))
             rfDiffList.append(DiffPosition(rfStmp, rf.tell()))
+        #print "cur : ", lf.tell(), "    end : ", lfEnd
             
     print "----- Diff -----"
     pCount = min(len(lfDiffList), len(rfDiffList))
@@ -114,7 +115,14 @@ def diffFile(lh, rh):
     
    
 if __name__ == "__main__":
-    lh = "/home/numa/dd0"
-    rh = "/home/numa/tt0"
+    args = sys.argv[1:]
+    print args
+    if not args:
+        print 'Not Command'
+        sys.exit()
+    if args[0].startswith('-'):
+        print 'not option'
+        sys.exit()
+    lh, rh = args[0], args[1]
 
     diffFile(lh, rh)
