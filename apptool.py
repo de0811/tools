@@ -18,15 +18,21 @@ def RunProcess(cmd):
         #print('working..')
     print process.poll()
 
+def CainRunProcess(cmd):
+    result = RunProcess(cmd)
+    if result == 1:
+        print '''Process Error'''
+        sys.exit()
+
 def ApkDeCompile(option, target):
     cmd = config.apktool + " " + option + " " + target
     print cmd
-    RunProcess(cmd)
+    CainRunProcess(cmd)
 
 def Signer(target):
     cmd = config.signer + " " + config.key + " " + config.keyPass + " " + target + " " + config.alias
     print cmd
-    RunProcess(cmd)
+    CainRunProcess(cmd)
 
 
 
