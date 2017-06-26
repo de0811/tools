@@ -38,7 +38,9 @@ class option:
     
     def run(self):
         for info in self.mOptInfos:
-            Factors = self.mOptFactor.get(info[0], list())
+            Factors = self.mOptFactor.get(info[0], None)
+            if Factors is None:
+                continue
             info[2](Factors)
 
     def addOpt(self, opt, argCount, func):

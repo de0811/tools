@@ -30,11 +30,11 @@ def RunProcess(cmd):
 class aapt:
     bPackageName = False
     def getPackageName(self, args):
-        if len(args) is 0: return
         self.bPackageName = True
     def run(self, args=list()):
         if len(args) is 0: return
         apkInfos = RunProcess(config.aapt + ' ' + args[0])
+        print(Fore.BLUE +" bPackageName : " + str(self.bPackageName)) 
         if self.bPackageName is True:
             for info in apkInfos:
                 if "package:" in info :

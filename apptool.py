@@ -51,16 +51,12 @@ class apptool :
     mState = AUTO
     mOut = ""
     def setDecompile(self, args):
-        if len(args) == 0: return
         self.mState = self.DECOMPILE
     def setCompile(self, args):
-        if len(args) == 0: return
         self.mState = self.COMPILE
     def setSign(self,args):
-        if len(args) == 0: return
         self.mState = self.SIGN
     def setComSig(self, args):
-        if len(args) == 0: return
         self.mState = self.COMSIG
     def setOut(self, args):
         if len(args) == 0: return
@@ -102,6 +98,8 @@ class apptool :
             else:
                 self._runComSig(args[0])
 
+        elif self.mState is self.COMPILE:
+            self._runCompile(args[0])
         elif self.mState is self.DECOMPILE:
             self._runDecompile(args[0])
         elif self.mState is self.SIGN:
