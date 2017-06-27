@@ -1,3 +1,6 @@
+
+#-*-coding:utf-8-*-
+
 import sys
 def diffFileLine(lfLine, rfLine):
     minLine = min(len(lfLine), len(rfLine))

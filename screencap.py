@@ -1,4 +1,6 @@
 #!/usr/bin/python
+#-*-coding:utf-8-*-
+
 from subprocess import *
 import os
 import sys
@@ -55,6 +57,15 @@ class screencap:
         print(Fore.WHITE + Back.GREEN + "OUT" + Back.RESET + "  " + self.mOutPath + os.sep + self.mFileName + Fore.RESET + Back.RESET + Style.NORMAL)
         CainRunProcess('''adb -d pull /sdcard/screencap.png ''' + self.mOutPath + os.sep + self.mFileName)
         CainRunProcess('''adb -d shell rm /sdcard/screencap.png''')
+
+    def help(self, args):
+        hel = '''screencap.py [command]
+        [command]
+        -o : 출력될 폴더를 선택합니다(폴더가 있어야 합니다)
+        -f : 출력될 파일의 이름을 저장합니다
+        command가 없을 경우 지정한 위치로 저장합니다
+        '''
+        print(Fore.LIGHTYELLOW_EX + hel + Fore.RESET)
 
 if __name__ == "__main__":
 

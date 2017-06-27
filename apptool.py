@@ -1,4 +1,6 @@
 #!/usr/bin/python
+#-*-coding:utf-8-*-
+
 from subprocess import *
 import os
 import sys
@@ -89,6 +91,7 @@ class apptool :
         ApkDeCompile(option, target)
 
     def run(self, args):
+        if len(args) < 1 : return
         print "Cur State : " + str(self.mState)
         if self.mState is self.AUTO:
             if '.apk' in args[0]:
@@ -107,10 +110,23 @@ class apptool :
         elif self.mState is self.COMSIG:
             self._runComSig(args[0])
 
+    def help(self, args):
+        hel = '''apptool.py [command] [target]
+        [command]
+        -h : 설명을 나타냅니다
+        -o : -d를 사용할때만 적용되며 디컴파일될 파일의 위치를 지정합니다
+        -s : 서명을 진행합니다
+        -b : 컴파일을 진행합니다
+        -d : 디컴파일을 진행합니다
+        아무런 command를 작성하지 않는다면 target의 상태를 보고 알아서 진행합니다
+        '''
+        print hel
+
 
 if __name__ == "__main__":
     app = apptool()
     opt = option.option()
+    opt.addOpt("-h", 0, app.help)
     opt.addOpt("-o", 1, app.setOut)
     opt.addOpt("-s", 0, app.setSign)
     opt.addOpt("-b", 0, app.setCompile)
@@ -120,44 +136,5 @@ if __name__ == "__main__":
     opt.parsing()
     opt.tprint()
     opt.run()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

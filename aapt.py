@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#-*-coding:utf-8-*-
 from subprocess import *
 import os
 import sys
@@ -34,7 +35,6 @@ class aapt:
     def run(self, args=list()):
         if len(args) is 0: return
         apkInfos = RunProcess(config.aapt + ' ' + args[0])
-        print(Fore.BLUE +" bPackageName : " + str(self.bPackageName)) 
         if self.bPackageName is True:
             for info in apkInfos:
                 if "package:" in info :
@@ -48,6 +48,14 @@ class aapt:
                     or "targetSdkVersion:" in info :
                 print(Fore.YELLOW + Style.BRIGHT + info + Fore.RESET + Style.NORMAL)
 
+    def help(self, args):
+        hel = '''aapt.py [command] <target>
+        [command]
+        -h : 설명을 표시합니다
+        -n : 패키지 이름만 출력합니다
+        '''
+        print(Fore.LIGHTCYAN_EX + hel + Fore.RESET) 
+
 
 if __name__ == "__main__":
 
@@ -56,8 +64,8 @@ if __name__ == "__main__":
     opt = option.option()
     #opt.addOpt("-o", 1, scCap.setOutPath)
     #opt.addOpt("-f", 1, scCap.setFileName)
+    opt.addOpt("-h", 0, aa.help)
     opt.addOpt("-n", 0, aa.getPackageName)
     opt.addOpt("default", 1, aa.run)
     opt.parsing()
-    opt.tprint()
     opt.run()
