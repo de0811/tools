@@ -111,7 +111,7 @@ class apptool :
             self._runComSig(args[0])
 
     def help(self, args):
-        hel = '''apptool.py [command] [target]
+        hel = u'''apptool.py [command] [target]
         [command]
         -h : 설명을 나타냅니다
         -o : -d를 사용할때만 적용되며 디컴파일될 파일의 위치를 지정합니다
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     opt.addOpt("-bs", 0, app.setComSig)	
     opt.addOpt("default", 1, app.run)
     opt.parsing()
-    opt.tprint()
+    #opt.tprint()
     opt.run()
 
 

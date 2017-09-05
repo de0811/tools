@@ -5,8 +5,8 @@ keyPass = '''-storepass 123456'''
 alias = '''testsig'''
 
 jadx = '''/home/numa/Android/utill/jadx/bin/jadx-gui'''
-bytecode = '''/home/numa/Android/utill/bytecode/BytecodeViewer2.9.8.jar'''
-jad = '''/home/numa/Android/utill/jad/jad'''
+bytecode = '''C:\\utill\\BytecodeViewer.2.9.8\\BytecodeViewer.exe'''
+jad = '''C:\\utill\\jd-gui\\jad'''
 
-screencapPath = '''D:\\ScreenCap'''
-aapt = '''C:\\Android\\sdk\\build-tools\\25.0.0\\aapt.exe dump badging'''
+screencapPath = '''C:\\temp\\ScreenCap'''
+aapt = '''C:\\Android\\sdk\\build-tools\\25.0.3\\aapt.exe dump badging'''

@@ -13,7 +13,7 @@ def getDirList(dir):
             fList.append(fullpath[len(dir):])
     return fList
 
-
+#왼쪽에만 있는 파일
 def diffDirList(lh, rh):
     coprimeList = list()
     unionList = list()

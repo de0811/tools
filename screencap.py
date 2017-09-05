@@ -59,7 +59,7 @@ class screencap:
         CainRunProcess('''adb -d shell rm /sdcard/screencap.png''')
 
     def help(self, args):
-        hel = '''screencap.py [command]
+        hel = u'''screencap.py [command]
         [command]
         -o : 출력될 폴더를 선택합니다(폴더가 있어야 합니다)
         -f : 출력될 파일의 이름을 저장합니다
