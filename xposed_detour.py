@@ -122,10 +122,10 @@ def getApplyList(oPackageName, cPackageName) :
     
     cList.append(cPackageName)
     cList.append('/'.join( cNameSplit ))
-    #cList.append( cNameSplit[3] + '_service_system' )
-    #cList.append( cNameSplit[3] + '_service_app' )
-    cList.append( cNameSplit[3] + 'defaulte_system' )
-    cList.append( cNameSplit[3] + 'defaulte_app' )
+    cList.append( cNameSplit[3] + '_service_system' )
+    cList.append( cNameSplit[3] + '_service_app' )
+    #cList.append( cNameSplit[3] + 'defaulte_system' )
+    #cList.append( cNameSplit[3] + 'defaulte_app' )
     cList.append( cNameSplit[3] + '.prop' )
     cList.append( '_' + cNameSplit[3] )
     cList.append( cNameSplit[3].capitalize() + 'Bridge' )
@@ -188,7 +188,7 @@ if __name__ == "__main__":
     oPackageName = 'de.robv.android.xposed' #접두사로 orignal 파일의 앞에 o라고 붙임
     cPackageName = 'com.android.plc.google' #접두사로 change 될 파일 이름 앞에 c라고 붙임
     #applyPath = 'C:\\temp\\work\\xposed\\gogo\\module\\app-release.apk' #적용할 위치
-    applyPath = 'C:\\temp\\work\\xposed\\gogo\\app-release.apk' #적용할 위치
+    applyPath = 'C:\\temp\\work\\xposed\\gogo\\app-release.apk' #적용할 위치 - 
     apptoolCMD = 'python ' + os.path.dirname(os.path.realpath(__file__)) + '\\apptool.py '
     if len(sys.argv[1:]) > 0 :
         args = sys.argv[1:]
