@@ -1,0 +1,9 @@
+samsung_test
+
+alias platform
+
+pass andorid
+
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore
+
+jarsigner -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore C:\utill\keystore\samsung.keystore [your .apk file] platform

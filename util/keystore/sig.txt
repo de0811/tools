@@ -1,0 +1,1 @@
+Vjarsigner -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore C:\utill\keystore\testsig.jks -storepass 123456 .\Grand\\dist\.apk testsig
