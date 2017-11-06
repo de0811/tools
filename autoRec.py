@@ -49,41 +49,75 @@ start_getEvent = False
 getEventPipe = None
 dequeEvent = deque()
 def getEventADB() :
+    print "start getEventADB()"
     cmd = "adb -d shell getevent"
     cmd_args = cmd.split()
-    getEventPipe = Popen(cmd_args, stdout=PIPE, stderr=STDOUT)
+    getEventPipe = Popen(cmd_args, stdin=None, stdout=PIPE, stderr=STDOUT)
     start_getEvent = True
     while getEventPipe.poll() is None :
         dequeEvent.append(getEventPipe.stdout.read(1))
         if start_getEvent != True :
             getEventPipe.kill()
+            #return
 
 start_manager = False
 def manager() :
+    print "start Manager()"
     start_manager = True
+    mergeEvent = list()
+    endEvent = list()
     while start_manager == True :
-        if len(dequeEvent) :
-            pass
+        if len(dequeEvent) > 1 :
+            tempE = dequeEvent.popleft()
+            if tempE == '\r' or tempE == '\n' :
+                tempE = "".join(mergeEvent)
+                if tempE == '\r' or tempE == '\n' or tempE == "" :
+                    continue
+                print tempE
+                if tempE.find('exit') != -1 or tempE.find('no devices found') != -1 :
+                    start_getEvent = False
+                    start_manager = False
+                    start_activity = False
+                    break
+                if len(stackActivity) > 0 :
+                    endEvent.append( stackActivity[-1] )
+                endEvent.append( tempE )
+                del mergeEvent
+                mergeEvent = list()
+            else :
+                mergeEvent.append( tempE )
+    print endEvent
+    mecro = open(currentFilePath + "/../mecro.txt", 'w')
+    for even in endEvent :
+        print str(even)
+        mecro.write(even + "\n")
+    mecro.close()
 
-def controller() :
-    command = ""
-    while command != "x" :
-        command = raw_input("x : Command exit")
-    start_getEvent = False
-    start_manager = False
 
-
-
+stackActivity = list()
+start_activity = False
 def getActivity() :
-    pass
+    adb = 'adb -d '
+    adb + 'shell dumpsys window |grep mFocusedWindow'
+    cmd = 'adb -d shell dumpsys window | grep mFocusedWindow'
+    start_activity = True
+    print "getActivity Start"
+    while start_activity == True :
+        temp = RunProcessOut(cmd)
+        if len(temp) > 0 :
+            if len(stackActivity) > 0 :
+                if stackActivity[-1].find( temp[0].strip() ) == -1 :
+                    stackActivity.append( temp[0].strip() )
+            else :
+                stackActivity.append( temp[0].strip() )
 
 if __name__ == "__main__":
-    getEventADB()
-    print "".join(dequeEvent)
     getEventThread = threading.Thread( target=getEventADB, args=() )
+    getEventThread.daemon = True
     getEventThread.start()
+    activityThread = threading.Thread( target=getActivity, args=() )
+    activityThread.daemon = True
+    activityThread.start()
     time.sleep(1)
     managerThread = threading.Thread( target=manager, args=() )
     managerThread.start()
-    controllerThread = threading.Thread( target=controller, args=() )
-    controllerThread.start()
