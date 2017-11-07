@@ -50,7 +50,7 @@ getEventPipe = None
 dequeEvent = deque()
 def getEventADB() :
     print "start getEventADB()"
-    cmd = "adb -d shell getevent"
+    cmd = "adb -d shell getevent -t"
     cmd_args = cmd.split()
     getEventPipe = Popen(cmd_args, stdin=None, stdout=PIPE, stderr=STDOUT)
     start_getEvent = True

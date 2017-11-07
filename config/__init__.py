@@ -17,7 +17,7 @@ jad = '''C:\\utill\\jd-gui\\jad'''
 
 screencapPath = '''c:\\temp\\ScreenCap'''
 if isWindows is False :
-    screencapPath = '''~/temp/ScreenCap'''
+    screencapPath = '''/Users/numa/temp/ScreenCap'''
 aapt = utilPath + "aapt.exe dump badging"
 if isWindows is False :
     aapt = utilPath + '''aapt dump badging'''
