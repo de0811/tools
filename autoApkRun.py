@@ -20,6 +20,16 @@ def returnDel(stra):
         return stra
     return stra[0:point]
 
+def getCurrentFocused(currentDumpsys) :
+    focused = ""
+    for k in range( len(currentDumpsys) ) :
+        if currentDumpsys[k].find("mFocusedWindow") != -1 :
+            focused = currentDumpsys[k].strip().split()[-1][:-1].split(":")[0]
+            break
+    print "focused  : " + focused
+    return focused
+ 
+
 if __name__ == "__main__":
     args = sys.argv[1:]
     apkFileName = args[0]
@@ -43,12 +53,13 @@ if __name__ == "__main__":
     #begin = time.clock()
     RunProcess(adb + 'shell am start -a android.intent.action.MAIN -n ' + apkName + '/' + apkActivity)
     
-    while 1:
+    while True:
     #time.sleep(5)
-        temp = RunProcess(adb + 'shell dumpsys window |grep mFocusedWindow')
+        temp = RunProcess(adb + 'shell dumpsys window')
+        focused = getCurrentFocused(temp)
         if len(temp) == 0 : continue
         print temp[0]
-        if 0 < temp[0].count(apkActivity) :
+        if 0 < focused.count(apkActivity) :
             break
 
     #print "adb -d am start -a android.intent.action.MAIN -n " + apkName + "/" + apkActivity
