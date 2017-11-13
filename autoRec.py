@@ -118,17 +118,23 @@ def getCurrentFocused(currentDumpsys) :
             break
     #print "focused  : " + focused
     return focused
-    
-def getCurrentFocusedSize(currentDumpsys, focused) :
+
+def getCurrentFocusedWindow(currentDumpsys, focused) :
     tt = ""
     focused_win_num = ""
     focused_size = ""
+    focused_win_list = list()
     for k in range( len(currentDumpsys) ) :
         if currentDumpsys[k].find(focused) != -1 :
             if currentDumpsys[k].find("Window #") != -1:
                 focused_win_num = currentDumpsys[k].strip().split(":")[0]
-                break
+                focused_win_list.append( focused_win_num[focused_win_num.find("#")+1:] )
     #print "focused Windows #  : " + focused_win_num
+    return "Window #" + max(focused_win_list)
+
+    
+def getCurrentFocusedSize(currentDumpsys, focused) :
+    focused_win_num = getCurrentFocusedWindow(currentDumpsys, focused)
     for k in range( len(currentDumpsys) ) :
         if currentDumpsys[k].find(focused_win_num) != -1 :
             _split = currentDumpsys[k+3].split()[0]
@@ -187,6 +193,7 @@ class DeviceInfo :
         self.curSizeY = strCurSize.split("x")[1]
     def setAppSizeParsing(self, strAppSize) :
         self.appSize = strAppSize
+        print strAppSize
         self.appSizeX = strAppSize.split("x")[0]
         self.appSizeY = strAppSize.split("x")[1]
     def prints(self) :
@@ -251,7 +258,7 @@ def settingWmSizeParsing(wmSize, deviceInfo) :
 
 
 if __name__ == "__main__":
-    apkFile = "/Users/numa/bonaria.apk"
+    apkFile = "/Users/numa/droid.apk"
     mecroFile = "/Users/numa/rec.txt"
 
 #테스트할땐 무시
@@ -273,7 +280,7 @@ if __name__ == "__main__":
             mecroFile = arg
     """
 
-    #RunProcessWait(currentFilePath + "/autoApkRun.py " + apkFile)
+    RunProcessWait(currentFilePath + "/autoApkRun.py " + apkFile)
     settingDeviceInfo(deviceInfo=recDeviceInfo)
 
     getEventThread = threading.Thread( target=getEventADB, args=() )
