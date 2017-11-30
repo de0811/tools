@@ -202,8 +202,8 @@ def runMecro(device, apk, runEvent) :
     if not os.path.isdir(deviceDirPath) :
         os.mkdir(deviceDirPath)
 
-    #autoApkRun.py running 
-    RunProcessWait("python " + currentFilePath + os.sep + "autoApkRun.py " + apk + " " + device)
+    #autoApk.py running
+    RunProcessWait("python " + currentFilePath + os.sep + "autoApk.py " + apk + " " + device)
 
     settingDeviceInfo(curDeviceInfo, device)
 
@@ -344,7 +344,6 @@ if __name__ == "__main__":
     #mecroFile = "/Users/numa/rec.txt"
     mecroFile = "c:\\temp\\autotest\\rec.txt"
 
-    """
     args = sys.argv[1:]
     print args
     if not args:
@@ -362,7 +361,6 @@ if __name__ == "__main__":
             mecroFile = arg
         else :
             mainDir = arg
-    """
 
    
     devicesOut = RunProcessOut("adb devices")

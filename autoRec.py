@@ -955,7 +955,7 @@ def playEvent(device="", apk="", loadEvent=list()) :
         if not os.path.isdir(deviceDirPath) :
             os.mkdir(deviceDirPath)
 
-    RunProcessWait("python " + currentFilePath + os.sep + "autoApkRun.py " + apk + " " + device)
+    RunProcessWait("python " + currentFilePath + os.sep + "autoApk.py " + apk + " " + device)
     time.sleep(5)
     cfx, cfy = getWmSize(device)
     print "[" + device + "]  FullScreen X : " + str(cfx) + "x" + str(cfy)
@@ -1124,7 +1124,6 @@ if __name__ == "__main__":
     appX, appY = getWmSize("")
 
 #테스트할땐 무시
-    """
     args = sys.argv[1:]
     print args
     if not args:
@@ -1140,10 +1139,9 @@ if __name__ == "__main__":
             apkFile = arg
         elif arg.endswith(".txt") == True :
             mecroFile = arg
-    """
-    
-    #RunProcessWait(currentFilePath + "/autoApkRun.py " + apkFile)
-    RunProcessWait("python " + currentFilePath + os.sep + "autoApkRun.py " + apkFile)
+
+    #RunProcessWait(currentFilePath + "/autoApk.py " + apkFile)
+    RunProcessWait("python " + currentFilePath + os.sep + "autoApk.py " + apkFile)
 
     getEventThread = threading.Thread( target=getEventADB, args=() )
     getEventThread.daemon = True
@@ -1151,8 +1149,8 @@ if __name__ == "__main__":
     time.sleep(5)
     sourceEvent = eventRec()
 
-    #RunProcessWait(currentFilePath + "/autoApkRun.py " + apkFile)
-    RunProcessWait("python " + currentFilePath + os.sep + "autoApkRun.py " + apkFile)
+    #RunProcessWait(currentFilePath + "/autoApk.py " + apkFile)
+    RunProcessWait("python " + currentFilePath + os.sep + "autoApk.py " + apkFile)
     time.sleep(5)
     eventCmds = parsingSourceEvent(sourceEvent)
     reUIRec("", eventCmds)
