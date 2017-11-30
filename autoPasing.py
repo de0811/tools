@@ -203,7 +203,7 @@ def runMecro(device, apk, runEvent) :
         os.mkdir(deviceDirPath)
 
     #autoApkRun.py running 
-    RunProcessWait(currentFilePath + "/autoApkRun.py " + apk + " " + device)
+    RunProcessWait("python " + currentFilePath + os.sep + "autoApkRun.py " + apk + " " + device)
 
     settingDeviceInfo(curDeviceInfo, device)
 
@@ -270,7 +270,7 @@ def runMecro(device, apk, runEvent) :
             if killCount % 5 == 0 :
                 sleepTime = sleepTime + 0.20
             if killCount > 30 :
-                RunProcessWait(currentFilePath + "/screencap.py -d " + device + " -o " + deviceDirPath)
+                RunProcessWait("python " + currentFilePath + "/screencap.py -d " + device + " -o " + deviceDirPath)
                 return
         #print "currentFocused  : " + currentFocused
 
@@ -333,15 +333,16 @@ def runMecro(device, apk, runEvent) :
                 RunProcess(adb + "shell input swipe " + str((sw.x1 + tempAddRatioX) * tempMulRatioX) + " " + str((sw.y1 + tempAddRatioY) * tempMulRatioY) + " " + str((sw.x2 + tempAddRatioX) * tempMulRatioX) + " " + str((sw.y2 + tempAddRatioY) * tempMulRatioY) + " " + str( int( (sw.time2-sw.time1) * 1000 ) ) )
         elif sw.action == "keyword" :
             if sw.event.startswith("screen") :
-                RunProcessWait(currentFilePath + "/screencap.py -d " + device + " -o " + deviceDirPath)
+                RunProcessWait("python " + currentFilePath + "/screencap.py -d " + device + " -o " + deviceDirPath)
     print "End Device : " + device
 
 
 
 if __name__ == "__main__":
-    apkFile = "/Users/numa/testapp.apk"
-    #apkFile = "/Users/numa/temp/test/"
-    mecroFile = "/Users/numa/rec.txt"
+    #apkFile = "/Users/numa/testapp.apk"
+    apkFile = "c:\\temp\\autotest\\testapp.apk"
+    #mecroFile = "/Users/numa/rec.txt"
+    mecroFile = "c:\\temp\\autotest\\rec.txt"
 
     """
     args = sys.argv[1:]

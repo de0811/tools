@@ -14,7 +14,8 @@ from collections import deque #Queue
 print "autoRec.py runing"
 
 currentFilePath = os.path.dirname(os.path.realpath(__file__))
-mainDir = dirName = currentFilePath + "/../temp"
+#mainDir = dirName = currentFilePath + "/../temp"
+mainDir = dirName = currentFilePath + os.sep + ".." + os.sep + "temp"
 deviceDirPath = ""
 
 appX = 0
@@ -42,13 +43,14 @@ def RunProcessPipe(cmd):
     pi.close()
 
 def RunProcessOut(cmd):
+    print cmd
     cmd_args = cmd.split()
     pipe = Popen(cmd_args, stdout=PIPE, stderr=STDOUT)
     outList = pipe.stdout.readlines()
     return outList
 
 def RunProcessWait(cmd):
-    #print cmd
+    print cmd
     cmd_args = cmd.split()
     process = Popen(cmd_args)
     while process.poll() is None:
@@ -529,10 +531,10 @@ def windowPointParsing(device="", fx=0, fy=0) :
     objList = list()
     clickableList = list()
 
+    print "##uiautoXML LEN : " + str( len(uiautoXML) )
     if len(uiautoXML) == 0 :
         return None
     uiautoXML = uiautoXML[0]
-    print uiautoXML
     start = 0
     end = 0
     while True :
@@ -953,7 +955,7 @@ def playEvent(device="", apk="", loadEvent=list()) :
         if not os.path.isdir(deviceDirPath) :
             os.mkdir(deviceDirPath)
 
-    RunProcessWait(currentFilePath + "/autoApkRun.py " + apk + " " + device)
+    RunProcessWait("python " + currentFilePath + os.sep + "autoApkRun.py " + apk + " " + device)
     time.sleep(5)
     cfx, cfy = getWmSize(device)
     print "[" + device + "]  FullScreen X : " + str(cfx) + "x" + str(cfy)
@@ -975,7 +977,7 @@ def playEvent(device="", apk="", loadEvent=list()) :
                     RunProcessWait(adb + "shell wm size " + str(rfx) + "x" + str(rfy))
                 print "screen size change"
         if cmd[1].event == "keyword" :
-            RunProcessWait(currentFilePath + "/screencap.py -d " + device + " -o " + deviceDirPath + " -f info.png")
+            RunProcessWait("python " + currentFilePath + "/screencap.py -d " + device + " -o " + deviceDirPath + " -f info.png")
         elif cmd[1].event == "event" :
             sens = False
             windowState = windowPointParsing(device, rfx, rfy)
@@ -1007,7 +1009,7 @@ def playEvent(device="", apk="", loadEvent=list()) :
                         print "!" * 120
                         break
                     if diffCount == 4 :
-                        RunProcessWait(currentFilePath + "/screencap.py -d " + device + " -o " + deviceDirPath + " -f warning.png")
+                        RunProcessWait("python " + currentFilePath + "/screencap.py -d " + device + " -o " + deviceDirPath + " -f warning.png")
                         tempFind = cmd[0]
                         windowState = windowPointParsing(device, rfx, rfy)
                         objGroup = windowState[0]
@@ -1024,7 +1026,7 @@ def playEvent(device="", apk="", loadEvent=list()) :
                         if sens == True :
                             break
                     if diffCount == 5 :
-                        RunProcessWait(currentFilePath + "/screencap.py -d " + device + " -o " + deviceDirPath + " -f error.png")
+                        RunProcessWait("python " + currentFilePath + "/screencap.py -d " + device + " -o " + deviceDirPath + " -f error.png")
                     time.sleep(1)
                     windowState = windowPointParsing(device, rfx, rfy)
                     objGroup = windowState[0]
@@ -1115,9 +1117,10 @@ def isBoxCollision(bx1, by1, bx2, by2, x, y) :
    
 
 if __name__ == "__main__":
-    #apkFile = "/Users/numa/droid.apk"
-    apkFile = "/Users/numa/testapp.apk"
-    mecroFile = "/Users/numa/rec.txt"
+    #apkFile = "/Users/numa/testapp.apk"
+    apkFile = "c:\\temp\\autotest\\testapp.apk"
+    #mecroFile = "/Users/numa/rec.txt"
+    mecroFile = "c:\\temp\\autotest\\rec.txt"
     appX, appY = getWmSize("")
 
 #테스트할땐 무시
@@ -1139,15 +1142,17 @@ if __name__ == "__main__":
             mecroFile = arg
     """
     
-    RunProcessWait(currentFilePath + "/autoApkRun.py " + apkFile)
-    
+    #RunProcessWait(currentFilePath + "/autoApkRun.py " + apkFile)
+    RunProcessWait("python " + currentFilePath + os.sep + "autoApkRun.py " + apkFile)
+
     getEventThread = threading.Thread( target=getEventADB, args=() )
     getEventThread.daemon = True
     getEventThread.start()
     time.sleep(5)
     sourceEvent = eventRec()
 
-    RunProcessWait(currentFilePath + "/autoApkRun.py " + apkFile)
+    #RunProcessWait(currentFilePath + "/autoApkRun.py " + apkFile)
+    RunProcessWait("python " + currentFilePath + os.sep + "autoApkRun.py " + apkFile)
     time.sleep(5)
     eventCmds = parsingSourceEvent(sourceEvent)
     reUIRec("", eventCmds)

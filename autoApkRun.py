@@ -55,6 +55,8 @@ if __name__ == "__main__":
         if li.find("rror") != -1 :
             RunProcess(adb + 'install -r ' + apkFileName)
     #begin = time.clock()
+    apkName = apkName.strip()
+    apkActivity = apkActivity.strip()
     RunProcess(adb + 'shell am start -a android.intent.action.MAIN -n ' + apkName + '/' + apkActivity)
 
     while True:

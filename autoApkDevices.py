@@ -14,15 +14,17 @@ from collections import deque #Queue
 print "autoRec.py runing"
 
 currentFilePath = os.path.dirname(os.path.realpath(__file__))
-mainDir = dirName = currentFilePath + "/../temp"
+#mainDir = dirName = currentFilePath + "/../temp"
+mainDir = dirName = currentFilePath + os.sep + ".." + os.sep + "temp"
 deviceDirPath = ""
 def RunProcessOut(cmd):
+    print cmd
     cmd_args = cmd.split()
     pipe = Popen(cmd_args, stdout=PIPE, stderr=STDOUT)
     outList = pipe.stdout.readlines()
     return outList
 def RunProcessWait(cmd):
-    #print cmd
+    print cmd
     cmd_args = cmd.split()
     process = Popen(cmd_args)
     while process.poll() is None:
@@ -37,29 +39,15 @@ def returnDel(stra):
 
 
    
-def autorunning(device="", apk="") :
+def autorunning(device, apkFileName, apkName, apkActivity) :
     adb = "adb -d "
     if device != "" :
         adb = "adb -s " + device + " "
         deviceDirPath = mainDir + os.sep + device
         if not os.path.isdir(mainDir) :
             os.mkdir(mainDir)
-
         if not os.path.isdir(deviceDirPath) :
             os.mkdir(deviceDirPath)
-
-    apkFileName = apk
-    
-    temp = RunProcessOut('python '+ currentFilePath +'/maapt.py -n ' + apkFileName)
-    apkName = returnDel(temp[0])
-    temp = RunProcessOut('python '+ currentFilePath +'/maapt.py -a ' + apkFileName)
-    apkActivity = returnDel(temp[0])
-    print "&&&" * 30
-    print temp
-    #apkActivity = temp[0].strip()
-    print apkName
-    print apkActivity
-
     RunProcessOut(adb + 'uninstall ' + apkName)
     outLine = RunProcessOut(adb + 'install -r -g ' + apkFileName)
     for li in outLine :
@@ -72,19 +60,6 @@ def autorunning(device="", apk="") :
  
 
 if __name__ == "__main__":
-    #apkFile = "/Users/numa/droid.apk"
-    #apkFile = "/Users/numa/temp/test/btc_android_20171124162013731_DX.apk"
-
-    #apkFile = "/Users/numa/temp/test/healthmax_20171127180137823_DX.apk"
-    #apkFile = "/Users/numa/temp/test/insung_20171127185817178_DX.apk"
-    #apkFile = "/Users/numa/temp/test/kyobo_20171127202602607_DX.apk"
-
-    #apkFile = "/Users/numa/temp/test/sksjoopasoo_20171128162217877_DX.apk"
-
-    #apkFile = "/Users/numa/temp/test/HKFireCyberApp_DX.apk"
-
-    #apkFile = "/Users/numa/temp/test/Onebank_V151_171116_1925_R_DX.apk"
-    
     apkFile = "/Users/numa/temp/test/SmartHiPlus_DX.apk"
     mecroFile = "/Users/numa/rec.txt"
 
@@ -104,14 +79,23 @@ if __name__ == "__main__":
         else :
             mainDir = arg
 
+    temp = RunProcessOut('python '+ currentFilePath +'/maapt.py -n ' + apkFile)
+    apkName = temp[0]
+    temp = RunProcessOut('python '+ currentFilePath +'/maapt.py -a ' + apkFile)
+    apkActivity = temp[0]
+    apkName = apkName.strip()
+    apkActivity = apkActivity.strip()
+
    
     devicesOut = RunProcessOut("adb devices")
     devices = list()
     for device in devicesOut[1:-1] :
         devices.append(device.split()[0])
 
+
     for device in devices :
-        t = threading.Thread( target=autorunning, args=(device, apkFile) )
+        print "Run device : " + device
+        t = threading.Thread( target=autorunning, args=(device, apkFile, apkName, apkActivity) )
         t.start()
 
 

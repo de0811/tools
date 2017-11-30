@@ -8,3 +8,4 @@
 *.pyc
 #config
 *.swp
+.idea

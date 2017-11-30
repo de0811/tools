@@ -3,7 +3,8 @@ import platform
 
 isWindows = 'Windows' in platform.platform()
 currentPath = os.path.dirname(os.path.realpath(__file__))
-utilPath = currentPath + "/../util/"
+#utilPath = currentPath + "/../util/"
+utilPath = currentPath + os.sep + ".." + os.sep + "util" + os.sep
 
 apktool = '''java -jar ''' + utilPath + '''apktool.jar'''
 signer = '''jarsigner -verbose -sigalg MD5withRSA -digestalg SHA1 -keystore'''
