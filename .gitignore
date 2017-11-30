@@ -4,7 +4,7 @@
 
 *~
 *.[oa]
-test*
+#test*
 *.pyc
 #config
 *.swp
