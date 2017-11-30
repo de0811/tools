@@ -186,20 +186,14 @@ def getPositionParsing(strPosSize) :
     return MRect(int(posX), int(posY), int(sizeX), int(sizeY))
     
 
-def isBoxCollision(posX, posY, rect) :
-    if rect.posX - posX < 0 or rect.posY - posY < 0 :
-        return False
-    elif rect.posX + rect.sizeX - posX > 0 or rect.posY + rect.sizeY - posY > 0 :
-        return False
-    return True
- 
+
 
 def runMecro(device, apk, runEvent) :
     adb = "adb "
     if len(device) > 0 :
         adb = "adb -s " + device + " "
 
-    deviceDirPath = mainDir + "/" + device
+    deviceDirPath = mainDir + os.sep + device
     curDeviceInfo = DeviceInfo()
 
     if not os.path.isdir(mainDir) :
@@ -345,7 +339,8 @@ def runMecro(device, apk, runEvent) :
 
 
 if __name__ == "__main__":
-    apkFile = "/Users/numa/droid.apk"
+    apkFile = "/Users/numa/testapp.apk"
+    #apkFile = "/Users/numa/temp/test/"
     mecroFile = "/Users/numa/rec.txt"
 
     """
@@ -374,13 +369,19 @@ if __name__ == "__main__":
     for device in devicesOut[1:-1] :
         devices.append(device.split()[0])
 
-    eventFull = parsingOriginEvent(mecroFile)
-    runEvent = parsingEvent(eventFull)
+    #eventFull = parsingOriginEvent(mecroFile)
+    #runEvent = parsingEvent(eventFull)
+
+    loadEvent = getLoadEvent(mecroFile)
+    #for device in devices :
+        #t = threading.Thread( target=runMecro, args=(device, apkFile, runEvent) )
+        #t.start()
+
 
     for device in devices :
-        t = threading.Thread( target=runMecro, args=(device, apkFile, runEvent) )
+        if len(device) < 3 :
+            continue
+        t = threading.Thread( target=playEvent, args=(device, apkFile, loadEvent) )
         t.start()
-
-
 
 

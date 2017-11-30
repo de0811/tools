@@ -48,11 +48,15 @@ if __name__ == "__main__":
     #apkActivity = temp[0].strip()
     print apkName
     print apkActivity
+
     RunProcess(adb + 'uninstall ' + apkName)
-    RunProcess(adb + 'install -r ' + apkFileName)
+    outLine = RunProcess(adb + 'install -r -g ' + apkFileName)
+    for li in outLine :
+        if li.find("rror") != -1 :
+            RunProcess(adb + 'install -r ' + apkFileName)
     #begin = time.clock()
     RunProcess(adb + 'shell am start -a android.intent.action.MAIN -n ' + apkName + '/' + apkActivity)
-    
+
     while True:
     #time.sleep(5)
         temp = RunProcess(adb + 'shell dumpsys window')
