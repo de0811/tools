@@ -6,5 +6,5 @@
 *.[oa]
 test*
 *.pyc
-config
+#config
 *.swp
