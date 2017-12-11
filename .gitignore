@@ -9,3 +9,5 @@
 #config
 *.swp
 .idea
+.bat
+.sh
