@@ -7,39 +7,22 @@ import sys
 import shutil
 import config
 from lib import option
+from lib.runprocess import *
 
 print "apktool.py runing"
 
-def RunProcess(cmd):
-    cmd_args = cmd.split()
-    #pipe = Popen(cmd_args, stdout=PIPE, stderr=PIPE)
-    #print pipe.stdout.read();
-    #print pipe.stderr.read();
-    process = Popen(cmd_args)
-    while process.poll() is None:
-        pass
-        #print('working..')
-    print process.poll()
 
-'''
-def RunProcess(cmd):
-#    print(Fore.BLUE + Back.LIGHTCYAN_EX + Style.BRIGHT + cmd + Fore.RESET + Back.RESET + Style.NORMAL)
-    cmd_args = cmd.split()
-    pipe = Popen(cmd_args, stdout=PIPE, stderr=STDOUT)
-    outList = pipe.stdout.readlines()
-    return outList
-'''
 def ApkDeCompile(option, target):
     cmd = config.apktool + " " + option + " " + target
     print cmd
-    RunProcess(cmd)
+    RunProcessPrints(cmd)
 #    for line in RunProcess(cmd):
 #        print line
 
 def Signer(target):
     cmd = config.signer + " " + config.key + " " + config.keyPass + " " + target + " " + config.alias
     print cmd
-    RunProcess(cmd)
+    RunProcessPrints(cmd)
 #    for line in RunProcess(cmd):
 #        print line
 

@@ -4,41 +4,16 @@
 from subprocess import *
 import os
 import sys
-import shutil
-import config
 import time
 import threading
-from lib import option
-from collections import deque #Queue
-
+from lib.runprocess import *
 print "autoRec.py runing"
 
 currentFilePath = os.path.dirname(os.path.realpath(__file__))
 #mainDir = dirName = currentFilePath + "/../temp"
 mainDir = dirName = currentFilePath + os.sep + ".." + os.sep + "temp"
 deviceDirPath = ""
-def RunProcessOut(cmd):
-    print cmd
-    cmd_args = cmd.split()
-    pipe = Popen(cmd_args, stdout=PIPE, stderr=STDOUT)
-    outList = pipe.stdout.readlines()
-    return outList
-def RunProcessWait(cmd):
-    print cmd
-    cmd_args = cmd.split()
-    process = Popen(cmd_args)
-    while process.poll() is None:
-        pass
-    #print process.poll()
 
-def returnDel(stra):
-    point = stra.find('\r\t')
-    if point is 0:
-        return stra
-    return stra[0:point]
-
-
-   
 def autorunning(device, apkFileName, apkName, apkActivity) :
     adb = "adb -d "
     if device != "" :

@@ -1,32 +1,15 @@
 #!/usr/bin/python
 #-*-coding:utf-8-*-
 from subprocess import *
-import os
-import sys
-import time
-import shutil
 import config
 from lib import option
+from lib.runprocess import *
 
 #-----------colorama---------------#
 from colorama import init, Fore, Back, Style
 init()
 #----------------------------------#
 #print(Fore.YELLOW + Back.BLUE + Style.BRIGHT + "aapt.py runing" + Fore.RESET + Back.RESET + Style.NORMAL)
-
-def RunProcess(cmd):
-#    print(Fore.BLUE + Back.LIGHTCYAN_EX + Style.BRIGHT + cmd + Fore.RESET + Back.RESET + Style.NORMAL)
-    cmd_args = cmd.split()
-    pipe = Popen(cmd_args, stdout=PIPE, stderr=STDOUT)
-#    while pipe.poll() is None:
-#        print(Fore.RED + Style.BRIGHT + "polling : " + str(pipe.poll()) + Fore.RESET + Style.NORMAL)
-#        time.sleep(0.5)
-#    if pipe.poll() == 1:
-#        print(Fore.RED + Style.BRIGHT + "Error" + Fore.RESET + Style.NORMAL)
-#        sys.exit()
-    #print(Fore.RED + Style.BRIGHT + "polling : " + str(pipe.stderr.read()) + Fore.RESET + Style.NORMAL)
-    outList = pipe.stdout.readlines()
-    return outList
 
 class aapt:
     bPackageName = False
@@ -37,7 +20,7 @@ class aapt:
         self.bPackageActivity = True
     def run(self, args=list()):
         if len(args) is 0: return
-        apkInfos = RunProcess(config.aapt + ' ' + args[0])
+        apkInfos = RunProcessOut(config.aapt + ' ' + args[0])
         if self.bPackageName is True:
             for info in apkInfos:
                 if "package:" in info :
