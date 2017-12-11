@@ -133,7 +133,6 @@ class DeviceInfo :
     def parsingDeviceEvent(self, deviceEventList) :
         for dDrive in deviceEventList :
             pass
-            print dDrive
 
 
 

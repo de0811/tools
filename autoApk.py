@@ -10,12 +10,6 @@ from lib.runprocess import *
 from lib.androidinfo import *
 
 
-def returnDel(stra):
-    point = stra.find('\r\t')
-    if point is 0:
-        return stra
-    return stra[0:point]
-
 def getCurrentFocused(currentDumpsys) :
     focused = ""
     for k in range( len(currentDumpsys) ) :
@@ -37,12 +31,9 @@ if __name__ == "__main__":
 
     
     temp = RunProcessOut('python '+ os.path.dirname(os.path.realpath(__file__)) +'/maapt.py -n ' + apkFileName)
-    #apkName = returnDel(temp[0])
     apkName = temp[0].strip()
     temp = RunProcessOut('python '+ os.path.dirname(os.path.realpath(__file__)) +'/maapt.py -a ' + apkFileName)
-    #apkActivity = returnDel(temp[0])
     apkActivity = temp[0].strip()
-    #apkActivity = temp[0].strip()
     print "APK Name : " + apkName + "  Activity Name : " + apkActivity
 
     RunProcessOut(adb + 'uninstall ' + apkName)
@@ -58,8 +49,6 @@ if __name__ == "__main__":
     while True:
     #time.sleep(5)
         currentDumpsys = DumpsysWindow(device)
-        #temp = RunProcessOut(adb + 'shell dumpsys window')
-        #focused = getCurrentFocused(temp)
         focused = currentDumpsys.mFocused
         #if len(temp) == 0 : continue
         #print temp[0]

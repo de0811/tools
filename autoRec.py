@@ -548,4 +548,5 @@ if __name__ == "__main__":
     reUIRec("", eventCmds)
     
     time.sleep(3)
+    print "*" * 50 + "END" + "*" * 50
     sys.exit()
