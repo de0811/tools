@@ -26,6 +26,14 @@ def RunProcessOut(cmd):
     outList = pipe.stdout.readlines()
     return outList
 
+def RunProcessOutPipe(filePath, cmd):
+    cmd_args = cmd.split()
+    f = open(filePath, "w")
+    pipe = Popen(cmd_args, stdout=f, stderr=f)
+    while pipe.poll() is None :
+        pass
+    f.close()
+
 def RunProcessWait(cmd):
     print cmd
     cmd_args = cmd.split()

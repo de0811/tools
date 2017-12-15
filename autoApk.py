@@ -40,11 +40,14 @@ if __name__ == "__main__":
     outLine = RunProcessOut(adb + 'install -r -g ' + apkFileName)
     for li in outLine :
         if li.find("rror") != -1 :
-            RunProcessOut(adb + 'install -r ' + apkFileName)
+            outt = RunProcessOut(adb + 'install -r ' + apkFileName)
+            for lli in outt :
+                if lli.find("rror") != -1 :
+                    RunProcessOut(adb + 'install ' + apkFileName)
     #begin = time.clock()
     apkName = apkName.strip()
     apkActivity = apkActivity.strip()
-    RunProcessOut(adb + 'shell am start -a android.intent.action.MAIN -n ' + apkName + '/' + apkActivity)
+    RunProcessOut(adb + "shell am start -n " + apkName + '/' + apkActivity + " -a android.intent.action.MAIN -c android.intent.category.LAUNCHER")
 
     while True:
     #time.sleep(5)

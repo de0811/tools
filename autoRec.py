@@ -514,10 +514,11 @@ if __name__ == "__main__":
         sys.exit()
     for arg in args :
         if arg.endswith("-h") == True :
-            helpe = u'''
+            helps = u'''
             매크로 파일인 .txt 파일과 APK파일인 .apk 스크린샷을 받을 위치의 path를 넣어주시면 됩니다.
             순서는 상관 없습니다.
             '''
+            print helps
         if arg.endswith(".apk") == True :
             apkFile = arg
         elif arg.endswith(".txt") == True :

@@ -27,9 +27,13 @@ def autorunning(device, apkFileName, apkName, apkActivity) :
     outLine = RunProcessOut(adb + 'install -r -g ' + apkFileName)
     for li in outLine :
         if li.find("rror") != -1 :
-            RunProcessOut(adb + 'install -r ' + apkFileName)
-    RunProcessOut(adb + 'shell am start -a android.intent.action.MAIN -n ' + apkName + '/' + apkActivity)
+            outt = RunProcessOut(adb + 'install -r ' + apkFileName)
+            for lli in outt :
+                if lli.find("rror") != -1 :
+                    RunProcessOut(adb + 'install ' + apkFileName)
 
+    #RunProcessOut(adb + 'shell am start -a android.intent.action.MAIN -n ' + apkName + '/' + apkActivity)
+    RunProcessOut(adb + "shell am start -n " + apkName + '/' + apkActivity + " -a android.intent.action.MAIN -c android.intent.category.LAUNCHER")
     #RunProcessWait(currentFilePath + "/autoApkRun.py " + apk + " " + device)
     time.sleep(5)
  
