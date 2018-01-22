@@ -1,7 +1,7 @@
 import os
 import platform
 
-isWindows = 'Windows' in platform.platform()
+
 currentPath = os.path.dirname(os.path.realpath(__file__))
 #utilPath = currentPath + "/../util/"
 utilPath = currentPath + os.sep + ".." + os.sep + "util" + os.sep
@@ -16,9 +16,24 @@ jadx = utilPath + '''jadx/bin/jadx-gui'''
 bytecode = '''C:\\utill\\BytecodeViewer.2.9.8\\BytecodeViewer.exe'''
 jad = '''C:\\utill\\jd-gui\\jad'''
 
-screencapPath = '''c:\\temp\\ScreenCap'''
-if isWindows is False :
+
+
+from sys import platform as _platform
+#linux
+if _platform == "linux" or _platform == "linux2" :
+    aapt = utilPath + 'linux_aapt dump badging'
     screencapPath = '''/Users/numa/temp/ScreenCap'''
-aapt = utilPath + "aapt.exe dump badging"
-if isWindows is False :
-    aapt = utilPath + '''aapt dump badging'''
+#MAC OS X
+elif _platform == "darwin" :
+    aapt = utilPath + 'mac_aapt dump badging'
+    screencapPath = '''/Users/numa/temp/ScreenCap'''
+#Windows 32-bit
+elif _platform == "win32" :
+	pass
+#Window 64-bit
+elif _platform == "win64" :
+	aapt = utilPath + "aapt.exe dump badging"
+	screencapPath = '''c:\\temp\\ScreenCap'''
+else :
+	#????
+	aapt = "??????"
