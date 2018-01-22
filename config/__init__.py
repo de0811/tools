@@ -29,6 +29,8 @@ elif _platform == "darwin" :
     screencapPath = '''/Users/numa/temp/ScreenCap'''
 #Windows 32-bit
 elif _platform == "win32" :
+	aapt = utilPath + "aapt.exe dump badging"
+	screencapPath = '''c:\\temp\\ScreenCap'''
 	pass
 #Window 64-bit
 elif _platform == "win64" :
