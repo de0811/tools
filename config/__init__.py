@@ -22,7 +22,7 @@ from sys import platform as _platform
 #linux
 if _platform == "linux" or _platform == "linux2" :
     aapt = utilPath + 'linux_aapt dump badging'
-    screencapPath = '''/Users/numa/temp/ScreenCap'''
+    screencapPath = '''/home/num/temp/ScreenCap'''
 #MAC OS X
 elif _platform == "darwin" :
     aapt = utilPath + 'mac_aapt dump badging'

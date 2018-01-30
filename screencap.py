@@ -4,7 +4,7 @@
 from subprocess import *
 import os
 import sys
-import shutil
+#import shutil
 import config
 from lib import option
 
@@ -63,27 +63,31 @@ class screencap:
             idx = idx + 1
         print(Fore.WHITE + Back.GREEN + "OUT" + Back.RESET + "  " + self.mOutPath + os.sep + self.mFileName + Fore.RESET + Back.RESET + Style.NORMAL)
         CainRunProcess(adb + '''pull /sdcard/screencap.png ''' + self.mOutPath + os.sep + self.mFileName)
-        CainRunProcess(adb + '''-d shell rm /sdcard/screencap.png''')
+        CainRunProcess(adb + '''shell rm /sdcard/screencap.png''')
 
     def help(self, args):
         hel = u'''screencap.py [command]
         [command]
+        -h : 실행 방법을 설명합니다
         -o : 출력될 폴더를 선택합니다(폴더가 있어야 합니다)
         -f : 출력될 파일의 이름을 저장합니다
         -d : 디바이스를 선택합니다
         command가 없을 경우 지정한 위치로 저장합니다
         '''
         print(Fore.LIGHTYELLOW_EX + hel + Fore.RESET)
+        sys.exit()
 
 if __name__ == "__main__":
 
     scCap = screencap()
 
     opt = option.option()
-    opt.addOpt("-d", 1, scCap.setDevice)
-    opt.addOpt("-o", 1, scCap.setOutPath)
-    opt.addOpt("-f", 1, scCap.setFileName)
-    opt.addOpt("default", 0, scCap.run)
+    #def addOpt(self, opt, argCount, bVarArg, func):
+    opt.addOpt(opt="-h", argCount=0, bVarArg=True, bHelp=True, func=scCap.help)
+    opt.addOpt(opt="-d", argCount=1, bVarArg=False, bHelp=False, func=scCap.setDevice)
+    opt.addOpt(opt="-o", argCount=1, bVarArg=False, bHelp=False, func=scCap.setOutPath)
+    opt.addOpt(opt="-f", argCount=1, bVarArg=False, bHelp=False, func=scCap.setFileName)
+    opt.addOpt(opt="default", argCount=0, bVarArg=True, bHelp=False, func=scCap.run)
     opt.parsing()
     #opt.tprint()
     opt.run()

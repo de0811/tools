@@ -87,10 +87,8 @@ class DumpsysWindow :
         for dump in display :
             if dump.startswith("app=") == True :
                 strAppSize = dump.split("=")[-1]
-        print strAppSize
         appX = strAppSize.split("x")[0]
         appY = strAppSize.split("x")[1]
-        print "APP SIZE ... X : " + str(appX) + "  Y : " + str(appY)
         return appX, appY
 
 class DeviceInfo :

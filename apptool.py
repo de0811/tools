@@ -104,18 +104,21 @@ class apptool :
         아무런 command를 작성하지 않는다면 target의 상태를 보고 알아서 진행합니다
         '''
         print hel
+        sys.exit()
 
 
 if __name__ == "__main__":
     app = apptool()
     opt = option.option()
-    opt.addOpt("-h", 0, app.help)
-    opt.addOpt("-o", 1, app.setOut)
-    opt.addOpt("-s", 0, app.setSign)
-    opt.addOpt("-b", 0, app.setCompile)
-    opt.addOpt("-d", 0, app.setDecompile)
-    opt.addOpt("-bs", 0, app.setComSig)	
-    opt.addOpt("default", 1, app.run)
+    
+    #def addOpt(self, opt, argCount, bVarArg, func):
+    opt.addOpt(opt="-h", argCount=0, bVarArg=False, bHelp=True, func=app.help)
+    opt.addOpt(opt="-o", argCount=1, bVarArg=False, bHelp=False, func=app.setOut)
+    opt.addOpt(opt="-s", argCount=0, bVarArg=False, bHelp=False, func=app.setSign)
+    opt.addOpt(opt="-b", argCount=0, bVarArg=False, bHelp=False, func=app.setCompile)
+    opt.addOpt(opt="-d", argCount=0, bVarArg=False, bHelp=False, func=app.setDecompile)
+    opt.addOpt(opt="-bs", argCount=0, bVarArg=False, bHelp=False, func=app.setComSig)	
+    opt.addOpt(opt="default", argCount=1, bVarArg=True, bHelp=False, func=app.run)
     opt.parsing()
     #opt.tprint()
     opt.run()

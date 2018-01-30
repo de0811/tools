@@ -58,9 +58,10 @@ if __name__ == "__main__":
     aa = aapt()
 
     opt = option.option()
-    opt.addOpt("-h", 0, aa.help)
-    opt.addOpt("-n", 0, aa.getPackageName)
-    opt.addOpt("-a", 0, aa.getPackageActivity)
-    opt.addOpt("default", 1, aa.run)
+
+    opt.addOpt(opt="-h", argCount=0, bVarArg=True, bHelp=True, func=aa.help)
+    opt.addOpt(opt="-n", argCount=0, bVarArg=True, bHelp=False, func=aa.getPackageName)
+    opt.addOpt(opt="-a", argCount=0, bVarArg=True, bHelp=False, func=aa.getPackageActivity)
+    opt.addOpt(opt="default", argCount=1, bVarArg=True, bHelp=False, func=aa.run)
     opt.parsing()
     opt.run()
