@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #-*-coding:utf-8-*-
 
 from lib.runprocess import *
@@ -40,12 +40,12 @@ class DumpsysWindow :
         focused = ""
         for k in range( len(currentDumpsys) ) :
             if currentDumpsys[k].find("mFocusedWindow") != -1 :
-                print currentDumpsys[k]
+                print (currentDumpsys[k])
                 if currentDumpsys[k].find("Error") != -1 :
                     mFocused_Error = True
                 focused = currentDumpsys[k].strip().split()[-1][:-1].split(":")[0]
                 break
-        #print "focused  : " + focused
+        #print ("focused  : " + focused)
         return focused
 
     def __getCurrentFocusedWindow(self, currentDumpsys, focused) :
@@ -58,7 +58,7 @@ class DumpsysWindow :
                 if currentDumpsys[k].find("Window #") != -1:
                     focused_win_num = currentDumpsys[k].strip().split(":")[0]
                     focused_win_list.append( focused_win_num[focused_win_num.find("#")+1:] )
-        #print "focused Windows #  : " + focused_win_num
+        #print ("focused Windows #  : " + focused_win_num)
         return "Window #" + max(focused_win_list)
 
     def __getCurrentFocusedSize(self, currentDumpsys, focused) :
@@ -67,8 +67,8 @@ class DumpsysWindow :
             if currentDumpsys[k].find(focused_win_num) != -1 :
                 _split = currentDumpsys[k+3].split()[0]
                 focused_size = _split[_split.find("{")+1:]
-        #print "focused Size  : " + focused_size
-        #print "mFocusedWindow " + focused + ":" + focused_size
+        #print ("focused Size  : " + focused_size)
+        #print ("mFocusedWindow " + focused + ":" + focused_size)
         return focused_size
 
     def currentAppSize(self, currentDumpsys) :
@@ -91,25 +91,84 @@ class DumpsysWindow :
         appY = strAppSize.split("x")[1]
         return appX, appY
 
+'''
+    deviceInfo = DeviceInfo()
+    deviceInfo.extractDeviceInfo()
+    deviceInfo.prints()
+'''
 class DeviceInfo :
     device = ""
     physicalSizeX = 0
     physicalSizeY = 0
     OverrideSizeX = 0
     OverrideSizeY = 0
+
+    model = ""              #기기의 이름
+    build_id = ""           #빌드 아이디
+    ver_sdk = ""            #SDK 버전
+    ver_os = ""             #안드로이드 OS 버전
+    cpu_32_list = list()    #CPU 32 bit 어떤 것 가능한지 리스트
+    cpu_64_list = list()    #CPU 64 bit 어떤 것 가능한지 리스트
+    tags = ""               #릴리즈인지 디버거용인지 aosp인지
+    manufacturer = ""        #제조사
     def __init__(self, device="") :
         self.device = device
         self.physicalSizeX = 0
         self.physicalSizeY = 0
-        self.overrideSizeX = 0
-        self.overrideSizeY = 0
-    def getWmSize(self, ) :
+        self.overridesizex = 0
+        self.overridesizey = 0
+        
+        self.model = ""              #기기의 이름
+        self.build_id = ""           #빌드 아이디
+        self.ver_sdk = ""            #SDK 버전
+        self.ver_os = ""             #안드로이드 OS 버전
+        self.cpu_32_list = ""        #CPU 32 bit 어떤 것 가능한지 리스트
+        self.cpu_64_list = ""        #CPU 64 bit 어떤 것 가능한지 리스트
+        self.tags = ""               #릴리즈인지 디버거용인지 aosp인지
+        self.manufacturer = ""        #제조사
+    
+    def __convertGetprop(self, var) :
+        if len(var) == 0 :
+            return None
+        if len(var) == 1 :
+            temp = var[0].decode("UTF-8").strip()
+            return temp
+
+    
+    def extractDeviceInfo(self) :
         adb = "adb -d "
         if self.device != "" :
             adb = "adb -s " + self.device + " "
-        strWM = RunProcessOut(adb + "shell wm size")
-        print "strWM  :::: "
-        print strWM
+        
+        cmd = adb + "shell getprop "
+        
+        self.model = self.__convertGetprop(RunProcessOut(cmd + "ro.product.model"))
+        self.build_id = self.__convertGetprop(RunProcessOut(cmd + "ro.build.id"))
+        self.ver_sdk = self.__convertGetprop(RunProcessOut(cmd + "ro.build.version.sdk"))
+        self.ver_os = self.__convertGetprop(RunProcessOut(cmd + "ro.build.version.release"))
+        self.cpu_32_list = self.__convertGetprop(RunProcessOut(cmd + "ro.product.cpu.abilist32"))
+        self.cpu_64_list = self.__convertGetprop(RunProcessOut(cmd + "ro.product.cpu.abilist64"))
+        self.tags = self.__convertGetprop(RunProcessOut(cmd + "ro.build.tags"))
+        self.manufacturer = self.__convertGetprop(RunProcessOut(cmd + "ro.product.manufacturer"))
+    
+    def prints(self) :
+        print (self.model)
+        print (self.build_id)
+        print ("model : " + self.model)
+        print ("build id : " + self.build_id)
+        print ("SDK : " + self.ver_sdk)
+        print ("OS : " + self.ver_os)
+        print ("cpu 32bit : " + self.cpu_32_list)
+        print ("cpu 64bit : " + self.cpu_64_list)
+        print ("tags : " + self.tags)
+        print ("manufacurer : " + self.manufacturer)
+
+
+    def getwmsize(self) :
+        adb = "adb -d "
+        if self.device != "" :
+            adb = "adb -s " + self.device + " "
+        strwm = RunProcessOut(adb + "shell wm size")
         '''
         Physical size: 1440x2560
         Override size: 1080x1920
@@ -118,7 +177,6 @@ class DeviceInfo :
             return 0, 0
         physical = strWM[0].strip().split(": ")[1]
         physical = physical.split("x")
-        print physical
         self.physicalSizeX = int( physical[0] )
         self.physicalSizeY = int( physical[1] )
         if len( strWM ) >= 2 :
@@ -159,13 +217,13 @@ class OBJ :
         self.x2 = x2
         self.y2 = y2
     def prints(self) :
-        print " " * 50 + "OBJ" + " " * 50
-        print "idx : " + self.idx
-        print "Class : " + self.cName
-        print "resource_id : " + self.resource_id
-        print "clickable : " + str(self.clickable)
-        print "x1[" + str(self.x1) + "]  " + "y1[" + str(self.y1) + "]  " + "x2[" + str(self.x2) + "]  " + "y2[" + str(self.y2) + "]"
-        print " " * 103
+        print (" " * 50 + "OBJ" + " " * 50)
+        print ("idx : " + self.idx)
+        print ("Class : " + self.cName)
+        print ("resource_id : " + self.resource_id)
+        print ("clickable : " + str(self.clickable))
+        print ("x1[" + str(self.x1) + "]  " + "y1[" + str(self.y1) + "]  " + "x2[" + str(self.x2) + "]  " + "y2[" + str(self.y2) + "]")
+        print (" " * 103)
 
 #Stem
 class OBJGroup :
@@ -185,11 +243,11 @@ class OBJGroup :
         self.objList = objList
         self.groupDown = groupDown
     def prints(self) :
-        print " " * 50 + "OBJGROUP" + " " * 50
-        print "x1[" + str(self.x1) + "]  " + "y1[" + str(self.y1) + "]  " + "x2[" + str(self.x2) + "]  " + "y2[" + str(self.y2) + "]"
-        print "objList Size : " + str(len(self.objList))
-        print "GroupDown Size : " + str(len(self.groupDown))
-        print " " * 108
+        print (" " * 50 + "OBJGROUP" + " " * 50)
+        print ("x1[" + str(self.x1) + "]  " + "y1[" + str(self.y1) + "]  " + "x2[" + str(self.x2) + "]  " + "y2[" + str(self.y2) + "]")
+        print ("objList Size : " + str(len(self.objList)))
+        print ("GroupDown Size : " + str(len(self.groupDown)))
+        print (" " * 108)
 
 def objGroupLeveling(objGroup, obj) :
     u'''
@@ -280,11 +338,11 @@ def objGroupPrints(objGroup) :
     :param objGroup:
     :return:
     '''
-    print "--" * objGroup.level + "x1[" + str(objGroup.x1) + "] " + "y1[" + str(objGroup.y1) + "] " + "x2[" + str(objGroup.x2) + "] " + "y2[" + str(objGroup.y2) + "] " 
+    print ("--" * objGroup.level + "x1[" + str(objGroup.x1) + "] " + "y1[" + str(objGroup.y1) + "] " + "x2[" + str(objGroup.x2) + "] " + "y2[" + str(objGroup.y2) + "] " )
     objName = list()
     for obj in objGroup.objList :
         objName.append(str(obj.idx) + ":" + obj.cName)
-    print "   " * objGroup.level + " L " + "::".join(objName)
+    print ("   " * objGroup.level + " L " + "::".join(objName))
     for _og in objGroup.groupDown :
         objGroupPrints(_og)
 
@@ -355,13 +413,13 @@ def printsClickableTree(clickableTree) :
     :param clickableTree:
     :return:
     '''
-    print "#" * 50 + "ROOT" + "#" * 50
+    print ("#" * 50 + "ROOT" + "#" * 50)
     for clickableList in clickableTree :
-        print "-" * 50 + "STEM" + "-" * 50
+        print ("-" * 50 + "STEM" + "-" * 50)
         for leaf in clickableList :
-            print leaf.prints()
-        print "-" * 104
-    print "#" * 104
+            print (leaf.prints())
+        print ("-" * 104)
+    print ("#" * 104)
 
 def isClickableCollision(clickableTree, x1, y1, x2, y2) :
     u'''
@@ -427,18 +485,18 @@ def isClickableCollisionName(clickableTree, x1, y1, x2, y2) :
     target = isClickableCollision(clickableTree, x1, y1, x2, y2)
     if target == None :
         return ("-", "-")
-    print "*" * 50 + "CLICK_TARGET" + "*" * 50
+    print ("*" * 50 + "CLICK_TARGET" + "*" * 50)
     target.prints()
-    print "*" * 111
+    print ("*" * 111)
     printsClickableTree(clickableTree)
     uper = __clickableTreeNameuu(clickableTree, target, True)
     under = __clickableTreeNameuu(clickableTree, target, False)
-    print "*" * 50 + "UPER" + "*" * 50
-    print uper
-    print "*" * 105
-    print "*" * 50 + "UNDER" + "*" * 50
-    print under
-    print "*" * 105
+    print ("*" * 50 + "UPER" + "*" * 50)
+    print (uper)
+    print ("*" * 105)
+    print ("*" * 50 + "UNDER" + "*" * 50)
+    print (under)
+    print ("*" * 105)
     
     return (uper, under)
 
@@ -524,7 +582,7 @@ def __searchClickObj(clickableTree, nameList, upper) :
                 oLeaf = oLeaf + 1
             if trueCount > 0 :
                 rstem = rstem + 1
-                print "COUNT UP : " + str(trueCount) + "   rstem : " + str(rstem) + "   maxrStem : " + str(maxrStem)
+                print ("COUNT UP : " + str(trueCount) + "   rstem : " + str(rstem) + "   maxrStem : " + str(maxrStem))
             if maxoStem <= ostem + 1 :
                 break
             ostem = ostem + 1
@@ -539,7 +597,7 @@ def __searchClickObj(clickableTree, nameList, upper) :
         maxTrueCount = 0
         for rstem in rstemList :
             maxTrueCount = len(rstem.split(":::")) + maxTrueCount
-        print "maxTrueCount : " + str(maxTrueCount)
+        print ("maxTrueCount : " + str(maxTrueCount))
         rstem = 0
         ostem = len(clickableTree) - 1
         reList = list()
@@ -553,7 +611,7 @@ def __searchClickObj(clickableTree, nameList, upper) :
                         tempPoints.append( (ostem,oLeaf) )
                     trueCount = trueCount + 1
                     if trueCount >= maxTrueCount :
-                        print "trueCount ? : " + str(trueCount)
+                        print ("trueCount ? : " + str(trueCount))
                         return clickableTree[ostem][oLeaf]
                 else :
                     rstem = 0
@@ -590,23 +648,23 @@ def searchClickObj(clickableTree, upper, under) :
     :param under: 녹화시 저장된 아래에서 위로 트리 정보
     :return: 다를 경우 가장 긴 오브젝트 정보를 저장한 위치의 반환 정보를 반환
     '''
-    print "UPPER : " + upper
-    print "UNDER : " + under
+    print ("UPPER : " + upper)
+    print ("UNDER : " + under)
     printsClickableTree(clickableTree)
     upperOBJ = __searchClickObj(clickableTree, upper, True)
     underOBJ = __searchClickObj(clickableTree, under, False)
     if upperOBJ == None and underOBJ == None :
-        print "ClickOBJ ALL NONE"
+        print ("ClickOBJ ALL NONE")
         return None
     elif upperOBJ == None :
-        print "ClickOBJ upperOBJ == None "
+        print ("ClickOBJ upperOBJ == None ")
         return underOBJ
     elif underOBJ == None :
-        print "ClickOBJ underOBJ == None "
+        print ("ClickOBJ underOBJ == None ")
         return upperOBJ
 
     if upperOBJ != underOBJ :
-        print "ClickOBJ !="
+        print ("ClickOBJ !=")
         upperCount = 0
         underCount = 0
         upperNamel = upper.split("::::")
@@ -620,7 +678,7 @@ def searchClickObj(clickableTree, upper, under) :
         else :
             return underOBJ
     else :
-        print "ClickOBJ =="
+        print ("ClickOBJ ==")
         return underOBJ
 
 
@@ -645,7 +703,7 @@ def windowPointParsing(device="", fx=0, fy=0) :
     objList = list()
     clickableList = list()
 
-    print "##uiautoXML LEN : " + str( len(uiautoXML) )
+    print ("##uiautoXML LEN : " + str( len(uiautoXML) ))
     if len(uiautoXML) == 0 :
         return None
     uiautoXML = uiautoXML[0]
@@ -726,7 +784,7 @@ def windowPointParsing(device="", fx=0, fy=0) :
         if(start == -1) :
             break
 
-    print "OBJ COUNT : " + str(len(objList))
+    print ("OBJ COUNT : " + str(len(objList)))
     objGroup = OBJGroup(0, 0, 0, int(fx), int(fy), list(), list())
     for obj in objList :
         if obj.x1 < 0 :

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #-*-coding:utf-8-*-
 
 from subprocess import *
@@ -9,19 +9,19 @@ import config
 from lib import option
 from lib.runprocess import *
 
-print "apktool.py runing"
+print ("apktool.py runing")
 
 
 def ApkDeCompile(option, target):
     cmd = config.apktool + " " + option + " " + target
-    print cmd
+    print (cmd)
     RunProcessPrints(cmd)
 #    for line in RunProcess(cmd):
 #        print line
 
 def Signer(target):
     cmd = config.signer + " " + config.key + " " + config.keyPass + " " + target + " " + config.alias
-    print cmd
+    print (cmd)
     RunProcessPrints(cmd)
 #    for line in RunProcess(cmd):
 #        print line
@@ -75,7 +75,7 @@ class apptool :
 
     def run(self, args):
         if len(args) < 1 : return
-        print "Cur State : " + str(self.mState)
+        print ("Cur State : " + str(self.mState))
         if self.mState is self.AUTO:
             if '.apk' in args[0]:
                 self._runDecompile(args[0])
@@ -103,7 +103,7 @@ class apptool :
         -d : 디컴파일을 진행합니다
         아무런 command를 작성하지 않는다면 target의 상태를 보고 알아서 진행합니다
         '''
-        print hel
+        print (hel)
         sys.exit()
 
 

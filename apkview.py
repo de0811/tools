@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #-*-coding:utf-8-*-
 
 from subprocess import *
@@ -8,17 +8,17 @@ from lib.runprocess import *
 
 def BytecodeViewer(target):
     cmd = config.bytecode + " " + target
-    print cmd
+    print (cmd)
     RunProcessPrints(cmd)
 
 def jadViewer(target):
     cmd = config.jad + " " + target
-    print cmd
+    print (cmd)
     RunProcessPrints(cmd)
 
 def jadxViewer(target):
     cmd = config.jadx + " " + target
-    print cmd
+    print (cmd)
     RunProcessPrints(cmd)
 
 if __name__ == "__main__":

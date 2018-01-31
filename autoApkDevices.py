@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #-*-coding:utf-8-*-
 
 from subprocess import *
@@ -7,7 +7,7 @@ import sys
 import time
 import threading
 from lib.runprocess import *
-print "autoRec.py runing"
+print ("autoApkDevices.py runing")
 
 currentFilePath = os.path.dirname(os.path.realpath(__file__))
 #mainDir = dirName = currentFilePath + "/../temp"
@@ -43,9 +43,9 @@ if __name__ == "__main__":
     mecroFile = "/Users/numa/rec.txt"
 
     args = sys.argv[1:]
-    print args
+    print (args)
     if not args:
-        print 'Not Command'
+        print ('Not Command')
         sys.exit()
     for arg in args :
         if arg.endswith("-h") == True :
@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
 
     for device in devices :
-        print "Run device : " + device
+        print ("Run device : " + device)
         t = threading.Thread( target=autorunning, args=(device, apkFile, apkName, apkActivity) )
         t.start()
 

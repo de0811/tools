@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #-*-coding:utf-8-*-
 
 #실행 , 종료 시키는 걸로 시간도 잴까? 시간도 재자
@@ -16,7 +16,7 @@ def getCurrentFocused(currentDumpsys) :
         if currentDumpsys[k].find("mFocusedWindow") != -1 :
             focused = currentDumpsys[k].strip().split()[-1][:-1].split(":")[0]
             break
-    print "focused  : " + focused
+    print ("focused  : " + focused)
     return focused
  
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     apkName = temp[0].strip()
     temp = RunProcessOut('python '+ os.path.dirname(os.path.realpath(__file__)) +'/maapt.py -a ' + apkFileName)
     apkActivity = temp[0].strip()
-    print "APK Name : " + apkName + "  Activity Name : " + apkActivity
+    print ("APK Name : " + apkName + "  Activity Name : " + apkActivity)
 
     RunProcessOut(adb + 'uninstall ' + apkName)
     outLine = RunProcessOut(adb + 'install -r -g ' + apkFileName)

@@ -9,7 +9,7 @@ currentFilePath = os.path.dirname(os.path.realpath(__file__))
 mainDir = dirName = currentFilePath + os.sep + ".." + os.sep + "temp"
 
 def RunProcess(cmd):
-    print cmd
+    print (cmd)
     cmd_args = cmd.split()
     Popen(cmd_args)
 
@@ -20,7 +20,7 @@ def RunProcessPipe(cmd):
     pi.close()
 
 def RunProcessOut(cmd):
-    #print cmd
+    #print (cmd)
     cmd_args = cmd.split()
     pipe = Popen(cmd_args, stdout=PIPE, stderr=STDOUT)
     outList = pipe.stdout.readlines()
@@ -35,7 +35,7 @@ def RunProcessOutPipe(filePath, cmd):
     f.close()
 
 def RunProcessWait(cmd):
-    print cmd
+    print (cmd)
     cmd_args = cmd.split()
     process = Popen(cmd_args)
     while process.poll() is None:
@@ -56,5 +56,5 @@ def RunProcessPrints(cmd):
     process = Popen(cmd_args)
     while process.poll() is None:
         pass
-    print process.poll()
+    print (process.poll())
 

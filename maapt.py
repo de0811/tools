@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #-*-coding:utf-8-*-
 from subprocess import *
 import config
@@ -19,24 +19,24 @@ class aapt:
     def getPackageActivity(self, args):
         self.bPackageActivity = True
     def run(self, args=list()):
-        if len(args) is 0: return
+        if len(args) == 0: return
         apkInfos = RunProcessOut(config.aapt + ' ' + args[0])
-        if self.bPackageName is True:
+        if self.bPackageName == True:
             for info in apkInfos:
                 if "package:" in info :
                     info = info.split()
                     info = info[1].split("'")
-                    print(Fore.YELLOW + Style.BRIGHT + info[1] + Fore.RESET + Style.NORMAL)
-                    return
-        elif self.bPackageActivity is True :
+                    print (Fore.YELLOW + Style.BRIGHT + info[1] + Fore.RESET + Style.NORMAL)
+        if self.bPackageActivity == True :
             for info in apkInfos:
                 if "launchable-activity:" in info :
                     info = info.split()
                     info = info[1].split("'")
-                    print(Fore.YELLOW + Style.BRIGHT + info[1] + Fore.RESET + Style.NORMAL)
-                    return
+                    print (Fore.YELLOW + Style.BRIGHT + info[1] + Fore.RESET + Style.NORMAL)
+        if self.bPackageActivity == True or self.bPackageName == True :
+            return
         for info in apkInfos:
-            print info
+            print (info)
 #            if "package:" in info \
 #                    or "sdkVersion:" in info \
 #                    or "targetSdkVersion:" in info \
