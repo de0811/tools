@@ -23,12 +23,14 @@ class aapt:
         apkInfos = RunProcessOut(config.aapt + ' ' + args[0])
         if self.bPackageName == True:
             for info in apkInfos:
+                info = info.decode("UTF-8").strip()
                 if "package:" in info :
                     info = info.split()
                     info = info[1].split("'")
                     print (Fore.YELLOW + Style.BRIGHT + info[1] + Fore.RESET + Style.NORMAL)
         if self.bPackageActivity == True :
             for info in apkInfos:
+                info = info.decode("UTF-8").strip()
                 if "launchable-activity:" in info :
                     info = info.split()
                     info = info[1].split("'")
@@ -36,6 +38,7 @@ class aapt:
         if self.bPackageActivity == True or self.bPackageName == True :
             return
         for info in apkInfos:
+            info = info.decode("UTF-8").strip()
             print (info)
 #            if "package:" in info \
 #                    or "sdkVersion:" in info \
