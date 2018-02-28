@@ -126,6 +126,8 @@ class DeviceInfo :
         self.cpu_64_list = ""        #CPU 64 bit 어떤 것 가능한지 리스트
         self.tags = ""               #릴리즈인지 디버거용인지 aosp인지
         self.manufacturer = ""        #제조사
+        
+        self.extractDeviceInfo()
     
     def __convertGetprop(self, var) :
         if len(var) == 0 :
@@ -152,8 +154,9 @@ class DeviceInfo :
         self.manufacturer = self.__convertGetprop(RunProcessOut(cmd + "ro.product.manufacturer"))
     
     def prints(self) :
-        print (self.model)
-        print (self.build_id)
+        print ("Join Name : " + self.device)
+        print ("Model : " + self.model)
+        print ("Build ID : " + self.build_id)
         print ("model : " + self.model)
         print ("build id : " + self.build_id)
         print ("SDK : " + self.ver_sdk)
