@@ -8,16 +8,22 @@ from lib.androidinfo import *
 
 class AutoUnix :
     out_path = ""
+    pull_list = list()
     def __init__(self) :
         self.out_path = "c:\\temp\\unix\\"
-        print ("__init__")
+        self.__setting_pull_list()
     def help(self, args) :
         hel = u"""autoUnix [option]
         [option]
         -o : File을 담을 Path를 설정
         -h : help
         """
-        print hel
+        print (hel)
+    def __setting_pull_list(self) :
+        u"""추출할 파일의 경로를 여기에만 적어주세요"""
+        self.pull_list = list()
+        self.pull_list.append("/proc/net/unix")
+        self.pull_list.append("/system/build.prop")
     def set_folder_path(self, args) :
         if args == 0 :
             print ("opt:error path")
@@ -26,7 +32,7 @@ class AutoUnix :
     def run(self, args) :
         devicesOut = RunProcessOut("adb devices")
         devices = list()
-        other = list()
+        others = list()
 
         for device in devicesOut :
             device = device.decode("UTF-8").strip()
@@ -40,35 +46,48 @@ class AutoUnix :
             if device.find("device") != -1 :
                 devices.append( device.split()[0] )
             else :
-                other.append( device.split()[0] )
-    
+                others.append( device.split()[0] )
+
         for device in devices :
             print ("RUN DEVICE : " + device)
+            """Device 정보 추출"""
             deviceInfo = DeviceInfo(device)
             deviceInfo.extractDeviceInfo()
             deviceInfo.prints()
 
-            adb = "adb "
-            if len(device) > 0 :
-                adb = "adb -s " + device + " "
-
-            RunProcessWait(adb + "shell cp /proc/net/unix /sdcard/")
-
-            name = deviceInfo.ver_os + "_" + deviceInfo.ver_sdk + "_" + deviceInfo.manufacturer + "_" + deviceInfo.model
+            """폴더 생성"""
+            if os.path.isdir(self.out_path) == False :
+                print ("Out DIR Error !!!")
+                sys.exit()
+            #name = deviceInfo.ver_os + "_" + deviceInfo.ver_sdk + "_" + deviceInfo.manufacturer + "_" + deviceInfo.model
+            name = deviceInfo.manufacturer + "_" + deviceInfo.ver_sdk + "_" + deviceInfo.ver_os + "_" + deviceInfo.model
             name = name.replace(" ", "")
-            fileName = name
+            folderName = name
             idx = 0
             print ("outPath : " + self.out_path)
             print ("OUT : " + os.sep)
             if self.out_path[-1] != os.sep :
                 self.out_path = self.out_path + os.sep
-            while os.path.isfile(self.out_path + os.sep + fileName) :
-                fileName = name + "_" + str(idx)
+            while os.path.isdir(self.out_path + os.sep + folderName) :
+                folderName = name + "_" + str(idx)
                 idx = idx + 1
+            
+            os.mkdir(path=self.out_path + folderName, mode=0o777)
 
-            RunProcessWait(adb + "pull /sdcard/unix " + self.out_path + fileName)
+            adb = "adb "
+            if len(device) > 0 :
+                adb = "adb -s " + device + " "
 
-        for oo in other :
+            """파일 추출"""
+            for __pull in self.pull_list :
+                temp_pull_name = __pull.replace("/", "_")
+                RunProcessWait(adb + "shell cp " + __pull + " " + "/sdcard/" + temp_pull_name)
+                RunProcessWait(adb + "pull " + "/sdcard/" + temp_pull_name + " " + self.out_path + folderName + os.sep + temp_pull_name)
+                RunProcessWait(adb + "shell rm -rf /sdcard/" + temp_pull_name)
+                #RunProcessWait(adb + "pull " + __pull + " " + self.out_path + folderName + os.sep + temp_pull_name)
+
+
+        for oo in others :
             print (oo)
             pass
 

@@ -43,20 +43,27 @@ class option:
                 for arg in tmp_args :
                     if arg == oinfo.opt :
                         bHelp = True
-        start_default_args = -1
+        start_default_args_idx = -1
         if bHelp == False :
+            bModifyCheck = False
             for oinfo in self.mOptInfos :
                 if oinfo.opt == "default" :
                     allCount = len(tmp_args)
                     #default가 인자를 원하지 않음
+                    start_default_args_idx = allCount - 1
                     if oinfo.argCount == 0 :
-                        start_default_args = allCount - 1
                         break
-                    if allCount == 0 :
+                    if allCount == 0 and oinfo.argCount != 0 and oinfo.bVarArg == True :
                         print ("default Args Fail")
                         return False
-                    start_default_args = allCount - oinfo.argCount
-                    for arg in tmp_args[start_default_args :] :
+                    if oinfo.argCount != 0 :
+                        bModifyCheck = True
+                        if allCount - oinfo.argCount < 0 :
+                            print ("default Args Fail_")
+                            return False
+                        else :
+                            start_default_args_idx = allCount - oinfo.argCount
+                    for arg in tmp_args[start_default_args_idx :] :
                         for compare in self.mOptInfos :
                             if arg == compare.opt :
                                 print ("default opt Args Fail")
@@ -64,7 +71,8 @@ class option:
                         optArgs.append(arg)
                     break
             self.mOptFactor.setdefault("default", optArgs)
-            tmp_args = tmp_args[0 : start_default_args + 1]
+            if bModifyCheck == True :
+                tmp_args = tmp_args[0 : start_default_args_idx ]
         else :
             self.mOptFactor.setdefault("default", None)
         
@@ -86,12 +94,11 @@ class option:
                 end = len(tmp_args) - 1
             else :
                 end = arrPosition[idx + 1][1] - 1
-            paramCount = end - start -1
+            paramCount = end - start #-1
             if end == start :
                 paramCount = 0
             
             
-            #print "arrPosition[idx][0] : " + arrPosition[idx][0] + "  start : " + str(start) + "   end : " + str(end)
             
             optArgs = list()
             #인자의 최대 갯수를 확인
@@ -100,12 +107,12 @@ class option:
                     if paramCount <= oinfo.argCount : #opt의 자신의 이름도 포함되어 있으니 -1
                         #고정 갯수인가 ?
                         if paramCount < oinfo.argCount and oinfo.bVarArg == True : #opt 자신의 이름도 포함되어 있으니 -1
-                            print ("opt argment VarArgs=True")
+                            print ("opt argment VarArgs=True " + oinfo.opt)
                             return False
                         for arg in tmp_args[start+1:end+1] : #start+1 : 옵션 이름 제외하고 전달, end+1 : 옵션의 끝에서 +1
                             optArgs.append(arg)
                     else :
-                        print ("opt overflow")
+                        print ("opt overflow !!!")
                         return False
             
             self.mOptFactor.setdefault(arrPosition[idx][0], optArgs)
@@ -154,52 +161,25 @@ class argRan :
         print ("help Test !!!")
         sys.exit()
     def arg1(self, argvs) :
-        print ("arg1 read")
-        if len(argvs) == 0: return
+        print ("*" * 30)
         print ("arg1 run")
-        str1 = argvs[0]
-        print (str1)
+        print (argvs)
+        print ("*" * 30)
     def arg2(self, argvs) :
+        print ("*" * 30)
         print ("arg2")
-        if len(argvs) == 0:
-            print ("argvs null")
-        else :
-            print (" :: arg_2_vs :: ")
-            for arg in argvs :
-                print (arg)
-            print (" ::      :: ")
+        print (argvs)
+        print ("*" * 30)
     def default(self, argvs) :
+        print ("*" * 30)
         print ("default")
-        if len(argvs) == 0:
-            print ("argvs null")
-        else :
-            print (" :: arg_default_vs :: ")
-            for arg in argvs :
-                print (arg)
-            print (" ::      :: ")
+        print (argvs)
+        print ("*" * 30)
 
 if __name__ == "__main__":
-    cc = CCC()
-
-    argvs = ["1111", "2222", "3333", "4444"]
-    argvs = ["1111"]
-    opt = option()
-
-    opt.addOpt(opt="-h", argCount=0, bVarArg=False, bHelp=True, func=cc.p)
-    opt.addOpt(opt="default", argCount=1, bVarArg=False, bHelp=False, func=cc.p)
-
-
-    if False is opt.parsing(argvs):
-        print ("argvs Error!!!")
-        sys.exit()
-
-    print ("---------------")
-    opt.run()
-    print ("---------------")
-
     argvs = ["-b", "-d", "22", "aavbb",]
     argvs = list()
-    argvs = ["-b", "asdasd"]
+    argvs = ["-d", "asdasd"]
     #argvs = ["-h",]
     print ("*" * 10 + "argvs" + "*" * 10)
     print (argvs)
@@ -208,8 +188,8 @@ if __name__ == "__main__":
     opt1 = option()
     #def addOpt(self, opt, argCount, bVarArg, func):
     opt1.addOpt(opt="-h", argCount=0, bVarArg=True, bHelp=True, func=argran.help)
-    opt1.addOpt(opt="-d", argCount=1, bVarArg=True, bHelp=False, func=argran.arg1)
-    opt1.addOpt(opt="-b", argCount=1, bVarArg=False, bHelp=False, func=argran.arg2)
+    opt1.addOpt(opt="-d", argCount=0, bVarArg=True, bHelp=False, func=argran.arg1)
+    opt1.addOpt(opt="-b", argCount=0, bVarArg=False, bHelp=False, func=argran.arg2)
     opt1.addOpt(opt="default", argCount=0, bVarArg=True, bHelp=False, func=argran.default)
     opt1.parsing(argvs)
     print ("---------------")
