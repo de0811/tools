@@ -15,6 +15,7 @@ mainDir = dirName = currentFilePath + os.sep + ".." + os.sep + "temp"
 deviceDirPath = ""
 
 def autorunning(device, apkFileName, apkName, apkActivity) :
+    print (device)
     adb = "adb -d "
     if device != "" :
         adb = "adb -s " + device + " "
@@ -26,9 +27,11 @@ def autorunning(device, apkFileName, apkName, apkActivity) :
     RunProcessOut(adb + 'uninstall ' + apkName)
     outLine = RunProcessOut(adb + 'install -r -g ' + apkFileName)
     for li in outLine :
+        li = li.decode("UTF-8").strip()
         if li.find("rror") != -1 :
             outt = RunProcessOut(adb + 'install -r ' + apkFileName)
             for lli in outt :
+                lli = lli.decode("UTF-8").strip()
                 if lli.find("rror") != -1 :
                     RunProcessOut(adb + 'install ' + apkFileName)
 
@@ -40,7 +43,6 @@ def autorunning(device, apkFileName, apkName, apkActivity) :
 
 if __name__ == "__main__":
     apkFile = "/Users/numa/temp/test/SmartHiPlus_DX.apk"
-    mecroFile = "/Users/numa/rec.txt"
 
     args = sys.argv[1:]
     print (args)
@@ -63,18 +65,33 @@ if __name__ == "__main__":
     temp = RunProcessOut('python '+ currentFilePath +'/maapt.py -a ' + apkFile)
     apkActivity = temp[0]
     apkName = apkName.strip()
+    apkName = apkName.decode("UTF-8").strip()
     apkActivity = apkActivity.strip()
+    apkActivity = apkActivity.decode("UTF-8").strip()
 
    
     devicesOut = RunProcessOut("adb devices")
     devices = list()
-    for device in devicesOut[1:-1] :
-        devices.append(device.split()[0])
+    others = list()
+
+    for device in devicesOut :
+        device = device.decode("UTF-8").strip()
+        device = device.strip()
+        if device.find("List of devices attached") != -1 :
+            continue
+        if device == u"\n" or device == u" " or device == u"\r\n" :
+            continue
+        if len( device.split() ) != 2 :
+            continue
+        if device.find("device") != -1 :
+            devices.append( device.split()[0] )
+        else :
+            others.append( device.split()[0] )
 
 
     for device in devices :
         print ("Run device : " + device)
         t = threading.Thread( target=autorunning, args=(device, apkFile, apkName, apkActivity) )
         t.start()
-
+        #autorunning(device, apkFile, apkName, apkActivity)
 
