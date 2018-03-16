@@ -7,6 +7,7 @@ import sys
 import time
 import threading
 from lib.runprocess import *
+from lib.androidinfo import *
 print ("autoApkDevices.py runing")
 
 currentFilePath = os.path.dirname(os.path.realpath(__file__))
@@ -15,7 +16,6 @@ mainDir = dirName = currentFilePath + os.sep + ".." + os.sep + "temp"
 deviceDirPath = ""
 
 def autorunning(device, apkFileName, apkName, apkActivity) :
-    print (device)
     adb = "adb -d "
     if device != "" :
         adb = "adb -s " + device + " "
@@ -24,16 +24,14 @@ def autorunning(device, apkFileName, apkName, apkActivity) :
             os.mkdir(mainDir)
         if not os.path.isdir(deviceDirPath) :
             os.mkdir(deviceDirPath)
+    
+    device_info = DeviceInfo(device)
+
     RunProcessOut(adb + 'uninstall ' + apkName)
-    outLine = RunProcessOut(adb + 'install -r -g ' + apkFileName)
-    for li in outLine :
-        li = li.decode("UTF-8").strip()
-        if li.find("rror") != -1 :
-            outt = RunProcessOut(adb + 'install -r ' + apkFileName)
-            for lli in outt :
-                lli = lli.decode("UTF-8").strip()
-                if lli.find("rror") != -1 :
-                    RunProcessOut(adb + 'install ' + apkFileName)
+    if int(device_info.ver_os[0]) >= 6 :
+        outLine = RunProcessOut(adb + 'install -r -g ' + apkFileName)
+    else :
+        RunProcessOut(adb + 'install ' + apkFileName)
 
     #RunProcessOut(adb + 'shell am start -a android.intent.action.MAIN -n ' + apkName + '/' + apkActivity)
     RunProcessOut(adb + "shell am start -n " + apkName + '/' + apkActivity + " -a android.intent.action.MAIN -c android.intent.category.LAUNCHER")

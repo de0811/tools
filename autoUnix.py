@@ -34,21 +34,9 @@ class AutoUnix :
         devices = list()
         others = list()
 
-        for device in devicesOut :
-            device = device.decode("UTF-8").strip()
-            device = device.strip()
-            if device.find("List of devices attached") != -1 :
-                continue
-            if device == u"\n" or device == u" " or device == u"\r\n" :
-                continue
-            if len( device.split() ) != 2 :
-                continue
-            if device.find("device") != -1 :
-                devices.append( device.split()[0] )
-            else :
-                others.append( device.split()[0] )
+        device_list = DeviceList()
 
-        for device in devices :
+        for device in device_list.devices :
             print ("RUN DEVICE : " + device)
             """Device 정보 추출"""
             deviceInfo = DeviceInfo(device)

@@ -96,6 +96,30 @@ class DumpsysWindow :
     deviceInfo.extractDeviceInfo()
     deviceInfo.prints()
 '''
+
+class DeviceList :
+    devices = list()
+    others = list()
+    def __init__(self) :
+        self.update_list()
+    def update_list(self) :
+        devicesOut = RunProcessOut("adb devices")
+        self.devices = list()
+        self.others = list()
+
+        for device in devicesOut :
+            device = device.decode("UTF-8").strip()
+            device = device.strip()
+            if device.find("List of devices attached") != -1 :
+                continue
+            if device == u"\n" or device == u" " or device == u"\r\n" :
+                continue
+            if len( device.split() ) != 2 :
+                continue
+            if device.find("device") != -1 :
+                self.devices.append( device.split()[0] )
+            else :
+                self.others.append( device.split()[0] )
 class DeviceInfo :
     device = ""
     physicalSizeX = 0
