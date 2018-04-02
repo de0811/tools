@@ -39,3 +39,9 @@ elif _platform == "win64" :
 else :
 	#????
 	aapt = "??????"
+
+
+if os.path.isdir(screencapPath) == False :
+	if os.path.isdir(os.path.dirname(screencapPath)) == False :
+		os.mkdir(os.path.dirname(screencapPath))
+	os.mkdir(screencapPath)

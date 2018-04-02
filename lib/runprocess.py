@@ -6,7 +6,17 @@ import os
 import time
 
 currentFilePath = os.path.dirname(os.path.realpath(__file__))
-mainDir = dirName = currentFilePath + os.sep + ".." + os.sep + "temp"
+#mainDir = dirName = currentFilePath + os.sep + ".." + os.sep + "temp"
+
+'''
+class RunProcess() : 
+    u"""한줄 프로세스 실행 코드"""
+    currentFilePath = os.path.dirname(os.path.realpath(__file__))
+    def play(self, cmd) :
+        cmd_args = cmd.split()
+        
+    pass
+'''
 
 def RunProcess(cmd):
     print (cmd)
@@ -58,3 +68,12 @@ def RunProcessPrints(cmd):
         pass
     print (process.poll())
 
+
+if __name__ == "__main__":
+    cmd = "echo \"helloooooooow???\""
+    cmd_args = cmd.split()
+    pi = open("/tmp/temp.txt", 'w')
+    cmd_args = cmd.split()
+    pipe = Popen(cmd_args, stdout=pi, stderr=pi)
+    outList = pipe.stdout.readlines()
+    print (outList)

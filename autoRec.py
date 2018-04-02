@@ -6,7 +6,7 @@ import threading
 from collections import deque #Queue
 from lib.androidinfo import *
 
-print "autoRec.py runing"
+print ("autoRec.py runing")
 
 currentFilePath = os.path.dirname(os.path.realpath(__file__))
 mainDir = dirName = currentFilePath + os.sep + ".." + os.sep + "temp"

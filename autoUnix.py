@@ -25,13 +25,11 @@ class AutoUnix :
         self.pull_list.append("/proc/net/unix")
         self.pull_list.append("/system/build.prop")
     def set_folder_path(self, args) :
-        if args == 0 :
+        if len(args) == 0 :
             print ("opt:error path")
             sys.exit()
         self.out_path = args[0]
     def run(self, args) :
-        devicesOut = RunProcessOut("adb devices")
-        devices = list()
         others = list()
 
         device_list = DeviceList()

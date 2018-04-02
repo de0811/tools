@@ -13,14 +13,44 @@ init()
 
 class aapt:
     bPackageName = False
+    package_name = ""
     bPackageActivity = False
+    package_activity = ""
+    def aapt(self) :
+        self.bPackageName = False
+        self.package_name = ""
+        self.bPackageActivity = False
+        self.package_activity = ""
+    def aapt_parsing(self, apk) :
+        apkInfos = RunProcessOut(config.aapt + ' ' + apk)
+        for info in apkInfos :
+            info = info.decode("UTF-8").strip()
+            if "package:" in info :
+                info = info.split()
+                info = info[1].split("'")
+                self.package_name = info[1]
+            elif "launchable-activity:" in info :
+                info = info.split()
+                info = info[1].split("'")
+                self.package_activity = info[1]
     def getPackageName(self, args):
         self.bPackageName = True
     def getPackageActivity(self, args):
         self.bPackageActivity = True
     def run(self, args=list()):
         if len(args) == 0: return
-        apkInfos = RunProcessOut(config.aapt + ' ' + args[0])
+        if self.bPackageActivity == False and self.bPackageName == False :
+            apkInfos = RunProcessOut(config.aapt + ' ' + args[0])
+            for info in apkInfos :
+                info = info.decode("UTF-8").strip()
+                print (info)
+            return 
+        self.aapt_parsing(args[0])
+        if self.bPackageName == True :
+            print (Fore.YELLOW + Style.BRIGHT + self.package_name + Fore.RESET + Style.NORMAL)
+        if self.bPackageActivity == True :
+            print (Fore.YELLOW + Style.BRIGHT + self.package_activity + Fore.RESET + Style.NORMAL)
+        """
         if self.bPackageName == True:
             for info in apkInfos:
                 info = info.decode("UTF-8").strip()
@@ -40,6 +70,7 @@ class aapt:
         for info in apkInfos:
             info = info.decode("UTF-8").strip()
             print (info)
+        """
 #            if "package:" in info \
 #                    or "sdkVersion:" in info \
 #                    or "targetSdkVersion:" in info \

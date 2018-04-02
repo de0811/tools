@@ -106,9 +106,6 @@ class CompatibilityManager() :
 
     def __prints_deviceInfos(self) :
         for key in self.deviceInfos.keys() :
-            print ("KEY !!")
-            print (key)
-            print ("_______")
             self.deviceInfos[key].prints()
  
 
