@@ -16,13 +16,23 @@ class aapt:
     package_name = ""
     bPackageActivity = False
     package_activity = ""
+    error_list = list()
+    is_error = False
     def aapt(self) :
         self.bPackageName = False
         self.package_name = ""
         self.bPackageActivity = False
         self.package_activity = ""
+        self.error_list = list()
+        self.is_error = False
     def aapt_parsing(self, apk) :
         apkInfos = RunProcessOut(config.aapt + ' ' + apk)
+        if len(apkInfos) < 5 :
+            for info in apkInfos :
+                info = info.decode("UTF-8").strip()
+                self.error_list.append(info)
+            self.is_error = True
+            return
         for info in apkInfos :
             info = info.decode("UTF-8").strip()
             if "package:" in info :
@@ -39,6 +49,10 @@ class aapt:
         self.bPackageActivity = True
     def run(self, args=list()):
         if len(args) == 0: return
+        if self.is_error == True :
+            for line in self.error_list :
+                print (line)
+            return
         if self.bPackageActivity == False and self.bPackageName == False :
             apkInfos = RunProcessOut(config.aapt + ' ' + args[0])
             for info in apkInfos :
@@ -50,27 +64,7 @@ class aapt:
             print (Fore.YELLOW + Style.BRIGHT + self.package_name + Fore.RESET + Style.NORMAL)
         if self.bPackageActivity == True :
             print (Fore.YELLOW + Style.BRIGHT + self.package_activity + Fore.RESET + Style.NORMAL)
-        """
-        if self.bPackageName == True:
-            for info in apkInfos:
-                info = info.decode("UTF-8").strip()
-                if "package:" in info :
-                    info = info.split()
-                    info = info[1].split("'")
-                    print (Fore.YELLOW + Style.BRIGHT + info[1] + Fore.RESET + Style.NORMAL)
-        if self.bPackageActivity == True :
-            for info in apkInfos:
-                info = info.decode("UTF-8").strip()
-                if "launchable-activity:" in info :
-                    info = info.split()
-                    info = info[1].split("'")
-                    print (Fore.YELLOW + Style.BRIGHT + info[1] + Fore.RESET + Style.NORMAL)
-        if self.bPackageActivity == True or self.bPackageName == True :
-            return
-        for info in apkInfos:
-            info = info.decode("UTF-8").strip()
-            print (info)
-        """
+ 
 #            if "package:" in info \
 #                    or "sdkVersion:" in info \
 #                    or "targetSdkVersion:" in info \

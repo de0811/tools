@@ -1,1 +1,1 @@
-__all__ = ['option', 'runprocess', 'androidinfo']
+__all__ = ['option', 'runprocess', 'androidinfo', 'common', 'logs']

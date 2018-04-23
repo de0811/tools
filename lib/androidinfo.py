@@ -5,6 +5,9 @@
 #from .runprocess import *
 #import runprocess
 from lib.runprocess import *
+u'''
+adb shell dumpsys window
+'''
 class DumpsysWindow :
     mFocused = ""
     mFocused_size = ""
@@ -12,6 +15,8 @@ class DumpsysWindow :
     app_size_x = 0
     app_size_y = 0
     device = ""
+    grant_activity_list = list()
+    is_grant_activity = False
     def __init__(self, device) :
         self.mFocused = ""
         self.mFocused_size = ""
@@ -19,6 +24,9 @@ class DumpsysWindow :
         self.app_size_x = 0
         self.app_size_y = 0
         self.device = device
+        self.grant_activity_list = list()
+        self.grant_activity_list.append("com.google.android.packageinstaller/com.android.packageinstaller.permission.ui.GrantPermissionsActivity")
+        is_grant_activity = False
         self.setupDumpsysWindow()
 
     def setupDumpsysWindow(self) :
@@ -32,14 +40,15 @@ class DumpsysWindow :
             temp_dumpsys.append(dumpsys.decode("UTF-8").strip())
         currentDumpsys = temp_dumpsys
         self.mFocused = self.__getCurrentFocused(currentDumpsys)
-        self.mFocused_size = self.__getCurrentFocusedSize(currentDumpsys, self.mFocused)
+        #self.mFocused_size = self.__getCurrentFocusedSize(currentDumpsys, self.mFocused)
         self.app_size_x, self.app_size_y = self.current_app_size(currentDumpsys)
 
     def isFocusedError(self):
         return self.mFocused_Error
 
-    '''
+    u'''
     크래쉬 팝업
+    adb shell dumpsys window | grep mFocusedWindow
     mFocusedWindow=Window{6a6755a u0 Application Error: net.nshc.droidx.foryou}
     '''
     def __getCurrentFocused(self, currentDumpsys):
@@ -49,22 +58,29 @@ class DumpsysWindow :
                 #print (currentDumpsys[k])
                 if currentDumpsys[k].find("Error") != -1 :
                     self.mFocused_Error = True
-                focused = currentDumpsys[k].strip().split()[-1][:-1].split(":")[0]
+                #focused = currentDumpsys[k].strip().split()[-1][:-1].split(":")[0]
+                focused = currentDumpsys[k].strip()
+                #권한 확인 Activity
+                for grant_activity in self.grant_activity_list :    
+                    #if grant_activity.lower().find(focused.lower()) != -1 :
+                    if focused.lower().find(grant_activity.lower()) != -1 :
+                        self.is_grant_activity = True
+                        break
                 break
         #print ("focused  : " + focused)
         return focused
 
     def __getCurrentFocusedWindow(self, currentDumpsys, focused) :
-        tt = ""
         focused_win_num = ""
-        focused_size = ""
         focused_win_list = list()
         for k in range( len(currentDumpsys) ) :
             if currentDumpsys[k].find(focused) != -1 :
                 if currentDumpsys[k].find("Window #") != -1:
                     focused_win_num = currentDumpsys[k].strip().split(":")[0]
                     focused_win_list.append( focused_win_num[focused_win_num.find("#")+1:] )
-        #print ("focused Windows #  : " + focused_win_num)
+            else :
+                return focused
+        print ("focused Windows #  : " + focused_win_num)
         return "Window #" + max(focused_win_list)
 
     def __getCurrentFocusedSize(self, currentDumpsys, focused) :
@@ -103,6 +119,9 @@ class DumpsysWindow :
     deviceInfo.prints()
 '''
 
+u'''
+adb devices
+'''
 class DeviceList :
     devices = list()
     others = list()
@@ -126,6 +145,10 @@ class DeviceList :
                 self.devices.append( device.split()[0] )
             else :
                 self.others.append( device.split()[0] )
+
+u'''
+adb shell cat /system/build.prop
+'''
 class DeviceInfo :
     device = ""
     physicalSizeX = 0
@@ -226,7 +249,9 @@ class DeviceInfo :
             pass
 
 
-
+u'''
+BOX collision Check
+'''
 def isBoxCollision(bx1, by1, bx2, by2, x, y) :
     if bx1 <= x and bx2 >= x and by1 <= y and by2 >= y :
         return True
@@ -284,7 +309,10 @@ class OBJGroup :
         print ("GroupDown Size : " + str(len(self.groupDown)))
         print (" " * 108)
 
-
+u'''
+adb shell uiautomator dump /sdcard/vivi.xml
+adb pull /sdcard/vivi.xml .
+'''
 class DeviceUIInfo :
     device = ""
     clickable_list = list()
