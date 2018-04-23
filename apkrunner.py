@@ -99,14 +99,10 @@ class ApkRunner :
         resource_info = device_ui_info.search_clickable_resource_id("com.android.packageinstaller:id/permission_allow_button")
         RunProcessWait("adb -s " + device + " shell input tap " + str(resource_info.x1 + ((resource_info.x2 - resource_info.x1) / 2)) + " " + str(resource_info.y1 + ((resource_info.y2 - resource_info.y1)/2)))
     
-    def __event_log_append(self, device, event, dist, timer) :
-        self.device_logs.append(device, event, dist, timer.second_full_tab())
-
-    
     def __screencap(self, device, device_path, screen_count, dumpsyswindow, run_timer) :
         time.sleep(0.0)
         #self.device_logs.append(device, "focused", dumpsyswindow.mFocused, run_timer.second_tab())
-        self.__event_log_append(device, "focused", dumpsyswindow.mFocused, run_timer)
+        self.device_logs.append(device, "focused", dumpsyswindow.mFocused, run_timer)
         file_name = str(screen_count) + "_" + dumpsyswindow.mFocused
         file_name = file_name.replace('/', '_') + ".png"
         file_name = file_name.replace(' ', '_')
@@ -154,11 +150,11 @@ class ApkRunner :
             #권한 처리 (권한 화면 일 시 4초 뒤에 처리) - 소장님 의견으로는 권한 화면일 시 내부 처리에 오류가 많이 나기 때문에 일정 시간의 대기를 가지고 확인하는게 좋다고 함
             if dumpsyswindow.is_grant_activity == True :
                 if grant_timer.is_running == False :
-                    self.__event_log_append(device, "grant_permission", "find grant", run_timer)
+                    self.device_logs(device, "grant_permission", "find grant", run_timer)
                     run_timer.pause()
                     grant_timer.start()
                 elif grant_timer.second_tab() > 4 :
-                    self.__event_log_append(device, "grant_permission", "click grant", run_timer)
+                    self.device_logs(device, "grant_permission", "click grant", run_timer)
                     self.__grant_permissions(device, dumpsyswindow)
                     run_timer.start()
                     grant_timer.stop()
