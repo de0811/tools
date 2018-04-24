@@ -6,16 +6,19 @@ import sys
 import threading
 from lib.androidinfo import *
 from lib import option
+from lib import logs
 import maapt
 import devicefinder
 
 class ApkInstaller :
     device_install_state_dict = dict()
     device_finder = devicefinder.DeviceFinder()
+    device_logs = logs.DeviceLogs()
 
     def __init__(self) :
         self.device_install_state_dict = dict() #기기별 설치 현황
         self.device_finder = devicefinder.DeviceFinder()
+        self.device_logs = logs.DeviceLogs()
 
     def help(self, args) :
         hel = u"""
@@ -44,6 +47,10 @@ class ApkInstaller :
         for line in out_line :
             line = line.decode("UTF-8").strip()
             tmp_out_line.append(line)
+            if line == "Success" :
+                self.device_logs.append(device, "install_log", line, 0)
+            else :
+                self.device_logs.append(device, "ERROR_install", line, 0)
         self.device_install_state_dict.setdefault(device, tmp_out_line)
 
     def __os_6_upper(self, apk, device) :
@@ -52,6 +59,10 @@ class ApkInstaller :
         for line in out_line :
             line = line.decode("UTF-8").strip()
             tmp_out_line.append(line)
+            if line == "Success" :
+                self.device_logs.append(device, "install_log", line, 0)
+            else :
+                self.device_logs.append(device, "ERROR_install", line, 0)
         self.device_install_state_dict.setdefault(device, tmp_out_line)
     
     def __normal_device_install(self, apk, device) :
@@ -89,7 +100,9 @@ class ApkInstaller :
         device_ui_info = DeviceUIInfo()
         device_ui_info.window_point_parsing(device, dumpsys_window.app_size_x, dumpsys_window.app_size_y)
         resource_info = device_ui_info.search_clickable_resource_id("com.android.packageinstaller:id/ok_button")
-        RunProcessWait("adb -s " + device + " shell input tap " + str(resource_info.x1 + ((resource_info.x2 - resource_info.x1) / 2)) + " " + str(resource_info.y1 + ((resource_info.y2 - resource_info.y1)/2)))
+        RunProcessWait("adb -s " + device + " shell input tap " + \
+            str(resource_info.x1 + ((resource_info.x2 - resource_info.x1) / 2)) + " " + \
+            str(resource_info.y1 + ((resource_info.y2 - resource_info.y1)/2)))
 
         #install_thread.join()    #thread waiting
     
@@ -98,6 +111,8 @@ class ApkInstaller :
         aapt.aapt_parsing(apk)
         if aapt.is_error == True :
             print ("APK Error !!")
+            for error_line in aapt.error_list :
+                self.device_logs.append("none", "ERROR_APK", error_line, 0)
             return
         apk_name = aapt.package_name
         apk_activity = aapt.package_activity
@@ -121,6 +136,8 @@ class ApkInstaller :
                 else :
                     t = threading.Thread( target=self.__normal_device_install, args=(apk, device) )
                     t.start()
+        for device in self.device_finder.find_list :
+            self.device_logs.prints(device)
     
     def run(self, args) :
         if len(args) != 1 :

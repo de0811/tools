@@ -102,7 +102,7 @@ class ApkRunner :
     def __screencap(self, device, device_path, screen_count, dumpsyswindow, run_timer) :
         time.sleep(0.0)
         #self.device_logs.append(device, "focused", dumpsyswindow.mFocused, run_timer.second_tab())
-        self.device_logs.append(device, "focused", dumpsyswindow.mFocused, run_timer)
+        self.device_logs.append(device, "focused", dumpsyswindow.mFocused, run_timer.second_full_tab())
         file_name = str(screen_count) + "_" + dumpsyswindow.mFocused
         file_name = file_name.replace('/', '_') + ".png"
         file_name = file_name.replace(' ', '_')
@@ -150,11 +150,11 @@ class ApkRunner :
             #권한 처리 (권한 화면 일 시 4초 뒤에 처리) - 소장님 의견으로는 권한 화면일 시 내부 처리에 오류가 많이 나기 때문에 일정 시간의 대기를 가지고 확인하는게 좋다고 함
             if dumpsyswindow.is_grant_activity == True :
                 if grant_timer.is_running == False :
-                    self.device_logs(device, "grant_permission", "find grant", run_timer)
+                    self.device_logs(device, "grant_permission", "find grant", run_timer.second_full_tab())
                     run_timer.pause()
                     grant_timer.start()
                 elif grant_timer.second_tab() > 4 :
-                    self.device_logs(device, "grant_permission", "click grant", run_timer)
+                    self.device_logs(device, "grant_permission", "click grant", run_timer.second_full_tab())
                     self.__grant_permissions(device, dumpsyswindow)
                     run_timer.start()
                     grant_timer.stop()
