@@ -235,8 +235,8 @@ if __name__ == "__main__":
     opt.addOpt(opt="-tw", argCount=1, bVarArg=True, bHelp=False, func=apk_runner.set_time_wait)
     opt.addOpt(opt="-timewait", argCount=1, bVarArg=True, bHelp=False, func=apk_runner.set_time_wait)
     opt.addOpt(opt="-apk", argCount=1, bVarArg=True, bHelp=False, func=apk_runner.set_apk)
-    opt.addOpt(opt="-a", argCount=20, bVarArg=False, bHelp=False, func=apk_runner.set_focused_limit)
-    opt.addOpt(opt="-activity", argCount=20, bVarArg=False, bHelp=False, func=apk_runner.set_focused_limit)
+    opt.addOpt(opt="-f", argCount=20, bVarArg=False, bHelp=False, func=apk_runner.set_focused_limit)
+    opt.addOpt(opt="-focusedlimit", argCount=20, bVarArg=False, bHelp=False, func=apk_runner.set_focused_limit)
     opt.addOpt(opt="default", argCount=0, bVarArg=True, bHelp=False, func=apk_runner.run)
     test = ['-os', '6.0', '/home/num/temp/scheduler.apk']
     #test = ['-v',]
