@@ -3,12 +3,19 @@ config/__init__.py 파일을 자신의 파일에 맞게 수정합니다.
 
 py 파일 설명
 -------------------------------------android----------------------------------------
+**APK**
 maapt.py            apk의 이름 또는 최초 시작 activity를 알 수 있습니다. -h로 확인
 apptool.py          apktool.jar을 이용하여 좀 더 편하게 개선 하였습니다. 옵션 없이 사용해도 자동으로 진행시킵니다. -h 참조
+
+**DEVICE**
 screencap.py        android 화면의 스크린 캡쳐 기능입니다.
+devicefinder.py     현재 연결된 기기 중 옵션에 맞는 기기들을 찾아줍니다. -h로 확인
+apkinstaller.py     각 기기에 맞게 앱을 자동으로 설치해줍니다. -h로 확인
+apkrunner.py        apk 실행 및 화면 동작 감시를 간단히 진행합니다. -h로 확인
+autoApkDevices.py   자동으로 앱을 실행시킵니다.(복수 사용) apkrunner와 apkinstaller를 이용하여 사용할 수 있지만 일단 QA호환으로 남겨두었습니다.
+
+**기타**
 xposed_detour.py    자동으로 xposed를 우회합니다. framework인 zip 파일이든 apk 파일이든 알아서 진행합니다.
-autoApk.py          자동으로 앱을 실행시킵니다.(1개의 기기만 적용)
-autoApkDevices.py   자동으로 앱을 실행시킵니다.(복수 사용)
 
 *녹화 재생 매크로
 autoParsing.py      재생 프로그램인데 쓰지마세요. 다시 만들테니까
@@ -20,7 +27,6 @@ diff.py             폴더 내부의 다른 파일들을 모두 찾습니다.
 ----------------------------------------------------------------------------------
 -----------------------------------삭제 예정--------------------------------------
 copy_android.py     지워야하는데 지울줄 몰라서 냅둿습니다.
-doc.py              지울줄 몰라서 냅둿습니다.
 memory_extract.py   scrdump와 함께 사용되며 자동으로 추출할 수 있는 곳에서 설정한 위치의 메모리를 추출합니다.
 popLog.py           자동으로 앱을 실행시키고 시간재려고 만들었는데 만들다가 말아서 쓸모 없습니다.
 usbevent.py         /sys/class/power_supply/usb/uevent 내부의 내용을 찾는 것인데 이제 쓸모 없습니다.
