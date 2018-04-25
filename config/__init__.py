@@ -12,9 +12,9 @@ key = utilPath + '''keystore/testsig.jks'''
 keyPass = '''-storepass 123456'''
 alias = '''testsig'''
 
-jadx = utilPath + '''jadx/bin/jadx-gui'''
-bytecode = '''C:\\utill\\BytecodeViewer.2.9.8\\BytecodeViewer.exe'''
-jad = '''C:\\utill\\jd-gui\\jad'''
+jadx = utilPath + 'jadx' + os.sep + 'bin' + os.sep + 'jadx-gui'
+bytecode = utilPath + 'BytecodeViewer.2.9.8' + os.sep + 'BytecodeViewer.exe'
+jad = utilPath + 'jd-gui' + os.sep + 'jad'
 
 
 
