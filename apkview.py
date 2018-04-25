@@ -6,21 +6,6 @@ import config
 from lib.runprocess import *
 from lib import option
 
-def BytecodeViewer(target):
-    cmd = config.bytecode + " " + target
-    print (cmd)
-    RunProcessPrints(cmd)
-
-def jadViewer(target):
-    cmd = config.jad + " " + target
-    print (cmd)
-    RunProcessPrints(cmd)
-
-def jadxViewer(target):
-    cmd = config.jadx + " " + target
-    print (cmd)
-    RunProcessPrints(cmd)
-
 class ApkViewer :
     OPT = "JADX"
     def __init__(self) :
