@@ -6,8 +6,8 @@ import os
 import sys
 #import shutil
 import config
-import threading
 from lib import option
+from concurrent.futures import ThreadPoolExecutor
 
 #-----------colorama---------------
 #from __future__ import print_function
@@ -84,8 +84,9 @@ class ScreenCap:
             idx = idx + 1
         print(Fore.WHITE + Back.GREEN + "OUT" + Back.RESET + "  " + self.out_path + self.file_name + Fore.RESET + Back.RESET + Style.NORMAL)
         self.__run_process_error_check(adb + '''shell screencap -p /sdcard/''' + self.file_name)
-        t = threading.Thread( target=self.__thread_pull_and_delete, args=() )
-        t.start()
+        with ThreadPoolExecutor(max_workers=1) as exe:
+            exe.submit(self.__thread_pull_and_delete)
+            exe.shutdown(wait=False)
 
     def run(self, args=list()):
         self.screen_shot()
@@ -104,7 +105,7 @@ class ScreenCap:
 
 if __name__ == "__main__":
 
-    print(Fore.YELLOW + Back.BLUE + Style.BRIGHT + "screencap.py runing" + Fore.RESET + Back.RESET + Style.NORMAL)
+    #print(Fore.YELLOW + Back.BLUE + Style.BRIGHT + "screencap.py runing" + Fore.RESET + Back.RESET + Style.NORMAL)
     scCap = ScreenCap()
 
     opt = option.option()
