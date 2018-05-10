@@ -239,6 +239,7 @@ if __name__ == "__main__":
     test = ['-os', '6.0', '-mo', 'nexus', '/home/num/temp/scheduler.apk']
     test = ['/home/num/temp/error_apk.apk']
     test = ['/home/num/temp/scheduler.apk']
-    opt.parsing(test)
+    #opt.parsing(test)
+    opt.parsing()
     #opt.tprint()
     opt.run()
