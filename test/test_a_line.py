@@ -6,7 +6,9 @@ from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import ThreadPoolExecutor
 import time
 import threading
-
+'''
+병렬 처리에 대한 테스트
+'''
 
 def process_ed(*args) :
     result = args# 입력받은 인자들을 처리한다...

@@ -2,7 +2,6 @@
 #-*-coding:utf-8-*-
 
 import sys
-import threading
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import ThreadPoolExecutor
 from lib.androidinfo import *

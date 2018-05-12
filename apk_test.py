@@ -24,9 +24,6 @@ if __name__ == "__main__":
         apk_runner.set_apk(["/Users/numa/temp/ez_no_log.apk", ])
         apk_runner.focused_limit.append("com.lgcns.ucapim.activity.UcapMainTabActivity")
 
-        #apk_runner.set_apk(["/Users/numa/temp/fxs_app-debug.apk", ])
-        #apk_runner.focused_limit.append("net.nshc.eagleeye.MainActivity")
-
         apk_runner.time_limit = 60
         apk_runner.time_wait = 3
         apk_runner.apk_running()
