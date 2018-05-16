@@ -1,9 +1,14 @@
 #!/usr/bin/python3
 #-*-coding:utf-8-*-
+
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
 from subprocess import *
 import config
 from lib import option
-from lib.runprocess import *
+from lib import runprocess
 
 #-----------colorama---------------#
 from colorama import init, Fore, Back, Style
@@ -26,7 +31,7 @@ class aapt:
         self.error_list = list()
         self.is_error = False
     def aapt_parsing(self, apk) :
-        apkInfos = RunProcessOut(config.aapt + ' ' + apk)
+        apkInfos = runprocess.RunProcessOut(config.aapt + ' ' + apk)
         if len(apkInfos) < 5 :
             for info in apkInfos :
                 info = info.decode("UTF-8").strip()
@@ -54,7 +59,7 @@ class aapt:
                 print (line)
             return
         if self.bPackageActivity == False and self.bPackageName == False :
-            apkInfos = RunProcessOut(config.aapt + ' ' + args[0])
+            apkInfos = runprocess.RunProcessOut(config.aapt + ' ' + args[0])
             for info in apkInfos :
                 info = info.decode("UTF-8").strip()
                 print (info)

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 #-*-coding:utf-8-*-
 import os
 from subprocess import * #Popen
@@ -13,7 +13,7 @@ def RunProcess(cmd):
     process = Popen(cmd_args)
     while process.poll() is None:
         pass
-    print process.poll()
+    print (process.poll())
     
 def c_unzip(source_file, dest_path):
     with zipfile.ZipFile(source_file, 'r') as zf:
@@ -91,13 +91,13 @@ def replaceData(file, zipData):
         f.truncate()
         f.write(content)
         if modif is True :
-            print 'modifiy File : ' + file
+            print ('modifiy File : ' + file)
 
 def replaceDir(dirList, zipDir):
     for dir in dirList:
         for zipOrigDir in zipDir :
             if( dir.endswith( zipOrigDir[0] ) ):
-                print dir + "\t\t" + dir.replace(zipOrigDir[0], zipOrigDir[1])
+                print (dir + "\t\t" + dir.replace(zipOrigDir[0], zipOrigDir[1]))
                 #다 만들고 풀어줘야함
                 shutil.move( dir, dir.replace(zipOrigDir[0], zipOrigDir[1]) )
 
@@ -197,10 +197,10 @@ if __name__ == "__main__":
     
     #eSTATE
     eSTATE = getState(applyPath)
-    print "eSTATE : " + str(eSTATE)
+    print ("eSTATE : " + str(eSTATE))
 
     if eSTATE is eAPPLY_NONE :
-        print "eSTATE Error !!!"
+        print ("eSTATE Error !!!")
     
     if eSTATE is eAPPLY_APK :
         RunProcess('python C:\\tools\\tools\\apptool.py ' + applyPath)
@@ -217,18 +217,18 @@ if __name__ == "__main__":
         os.remove(applyPath + '\\system\\framework\\XposedBridge.jar')
     
     elif eSTATE is eAPPLY_DIR :
-        print "eSTATE Error !!!"
+        print ("eSTATE Error !!!")
         pass
     
     #변경할 목록 분석해서 목록으로 정리
     oList, cList, oDirList, cDirList = getApplyList(oPackageName, cPackageName)
-    print '*' * 30
-    print oList
-    print cList
-    print '-' * 30
-    print oDirList
-    print cDirList
-    print '*' * 30
+    print ('*' * 30)
+    print (oList)
+    print (cList)
+    print ('-' * 30)
+    print (oDirList)
+    print (cDirList)
+    print ('*' * 30)
     
     #이거 하나 만들려고 별 짓을 다 했네
     comb = zip(oList, cList)
@@ -240,14 +240,14 @@ if __name__ == "__main__":
     #해당 폴더 아래로 모두 찾아서 바꿔 넣기
     for file in fileList:
         replaceData(file, comb)
-    print '!!!! File End !!!!'
+    print ('!!!! File End !!!!')
 
     #폴더 이름 변경
     fileList.reverse()
     dirList.reverse()
     replaceDir(fileList, combDir)
     replaceDir(dirList, combDir)
-    print '!!!! Dir End !!!!'
+    print ('!!!! Dir End !!!!')
 
     if eSTATE is eAPPLY_APK :
         applyPath = inputPath
@@ -268,4 +268,4 @@ if __name__ == "__main__":
         shutil.rmtree(applyPath) #FrameWork 압축 풀었던 폴더 삭제
 
 
-    print '!!!! END !!!!'
+    print ('!!!! END !!!!')

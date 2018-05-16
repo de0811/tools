@@ -2,12 +2,17 @@
 #-*-coding:utf-8-*-
 
 import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import ThreadPoolExecutor
-from lib.androidinfo import *
+from lib import androidinfo
 from lib import option
 from lib import common
 from lib import logs
+from lib import runprocess
+import time
 import config
 import maapt
 import devicefinder
@@ -108,10 +113,10 @@ class ApkRunner :
         -------
 
         """   
-        device_ui_info = DeviceUIInfo()
+        device_ui_info = androidinfo.DeviceUIInfo()
         device_ui_info.window_point_parsing(device, dumpsys_window.app_size_x, dumpsys_window.app_size_y)
         resource_info = device_ui_info.search_clickable_resource_id("com.android.packageinstaller:id/permission_allow_button")
-        RunProcessWait("adb -s " + device + " shell input tap " + str(resource_info.x1 + ((resource_info.x2 - resource_info.x1) / 2)) + " " + str(resource_info.y1 + ((resource_info.y2 - resource_info.y1)/2)))
+        runprocess.RunProcessWait("adb -s " + device + " shell input tap " + str(resource_info.x1 + ((resource_info.x2 - resource_info.x1) / 2)) + " " + str(resource_info.y1 + ((resource_info.y2 - resource_info.y1)/2)))
     
     def __screencap(self, device, device_path, screen_count, dumpsyswindow, run_timer) :
         #time.sleep(0.0)
@@ -171,7 +176,7 @@ class ApkRunner :
 
         #종료 조건에 홈화면이 나올 경우도 추가
         private_focused_limit = copy.deepcopy(self.focused_limit)
-        home_dumpsyswindow = DumpsysWindow(device)
+        home_dumpsyswindow = androidinfo.DumpsysWindow(device)
         private_focused_limit.append(home_dumpsyswindow.mFocused)
 
         #시간 점검 변수들 생성
@@ -183,10 +188,10 @@ class ApkRunner :
         self.device_logs.append(device, "State", "Start", run_timer.second_full_tab())
         adb = "adb -s " + device + " "
         #print ("start activity : " + self.apk_start_activity)
-        RunProcessOut(adb + "shell am start -n " + self.apk_name + '/' + self.apk_start_activity + " -a android.intent.action.MAIN -c android.intent.category.LAUNCHER")
+        runprocess.RunProcessOut(adb + "shell am start -n " + self.apk_name + '/' + self.apk_start_activity + " -a android.intent.action.MAIN -c android.intent.category.LAUNCHER")
         while True :
             time.sleep(0.1)
-            dumpsyswindow = DumpsysWindow(device)
+            dumpsyswindow = androidinfo.DumpsysWindow(device)
 
             #새로운 화면일 시 저장
             focused_list = self.device_logs.find_event(device, "focused")
