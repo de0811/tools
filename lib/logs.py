@@ -38,6 +38,8 @@ class DeviceLogs :
     
     def prints(self, device) :
         try :
+            if self.logs.get(device) == None :
+                return
             for log_unit in self.logs[device] :
                 print (device + " : " + log_unit.event + " : " + log_unit.dist + " :: " + str(log_unit.time))
         finally :
