@@ -9,6 +9,7 @@ from lib import option
 from lib import logs
 import maapt
 import devicefinder
+from concurrent.futures import ProcessPoolExecutor
 
 class ApkInstaller :
     device_install_state_dict = dict()
@@ -65,13 +66,13 @@ class ApkInstaller :
                 self.device_logs.append(device, "ERROR_install", line, 0)
         self.device_install_state_dict.setdefault(device, tmp_out_line)
     
-    def __normal_device_install(self, apk, device) :
+    def normal_device_install(self, apk, device) :
         if int( self.device_finder.device_dict.get(device).ver_sdk ) < 23 :
             self.__os_6_under(apk, device)
         else :
             self.__os_6_upper(apk, device)
 
-    def __mi_device_install(self, apk, device) :
+    def mi_device_install(self, apk, device) :
         #Thread install & focused 
         install_thread = None
         if int( self.device_finder.device_dict.get(device).ver_sdk ) < 23 :
@@ -106,6 +107,14 @@ class ApkInstaller :
 
         #install_thread.join()    #thread waiting
     
+    def apk_install_check(self, device, apk_name) :
+        while(True) :
+            apk_list = RunProcessOut("adb -s " + device + " shell pm list package -f | grep " + apk_name)
+            if len(apk_list) <= 0 :
+                time.sleep(1)
+            else :
+                return
+    
     def apk_install(self, apk) :
         aapt = maapt.aapt()
         aapt.aapt_parsing(apk)
@@ -115,28 +124,33 @@ class ApkInstaller :
                 self.device_logs.append("none", "ERROR_APK", error_line, 0)
             return
         apk_name = aapt.package_name
-        apk_activity = aapt.package_activity
-        print ("APK : " + apk + "  Name : " + apk_name + "  Activity : " + apk_activity)
+        #임시 작업
+        #apk_activity = aapt.package_activity
+        #print ("APK : " + apk + "  Name : " + apk_name + "  Activity : " + apk_activity)
         self.device_finder.find_device_list()
         if len(self.device_finder.find_list) == 0 :
             print ("None Target devices")
-        elif len(self.device_finder.find_list) == 1 :
-            for device in self.device_finder.find_list :
-                RunProcessWait("adb -s " + device + " uninstall " + apk_name)
-                if self.device_finder.device_dict.get(device).manufacturer == "Xiaomi" :
-                    self.__mi_device_install(apk, device)
-                else :
-                    self.__normal_device_install(apk, device)
+            self.device_logs.append("none", "ERROR_INSTALL", "DEVICE_NONE", 0)
+            return
+
         else :
-            for device in self.device_finder.find_list :
-                RunProcessWait("adb -s " + device + " uninstall " + apk_name)
-                if self.device_finder.device_dict.get(device).manufacturer == "Xiaomi" :
-                    t = threading.Thread( target=self.__mi_device_install, args=(apk, device) )
-                    t.start()
-                else :
-                    t = threading.Thread( target=self.__normal_device_install, args=(apk, device) )
-                    t.start()
+            #####################################################
+            print ("Process Count :: " + str(len(self.device_finder.find_list)))
+            with ProcessPoolExecutor(max_workers=len(self.device_finder.find_list)) as exe:
+                for device in self.device_finder.find_list :
+                    RunProcessWait("adb -s " + device + " shell pm uninstall " + apk_name)
+
+                    if self.device_finder.device_dict.get(device).manufacturer == "Xiaomi" :
+                        exe.submit(self.mi_device_install, apk, device)
+                    else :
+                        exe.submit(self.normal_device_install, apk, device)
+
+                    time.sleep(0.1)
+                exe.shutdown(wait=True)
+            #####################################################
+        
         for device in self.device_finder.find_list :
+            self.apk_install_check(device, apk_name)
             self.device_logs.prints(device)
     
     def run(self, args) :
@@ -144,6 +158,19 @@ class ApkInstaller :
             return
         apk = args[0]
         self.apk_install(apk)
+    
+    def apk_uninstall(self, apk) :
+        aapt = maapt.aapt()
+        aapt.aapt_parsing(apk)
+        if aapt.is_error == True :
+            print ("APK Error !!")
+            for error_line in aapt.error_list :
+                self.device_logs.append("none", "ERROR_APK", error_line, 0)
+            return
+        apk_name = aapt.package_name
+
+        for device in self.device_finder.find_list :
+            RunProcessWait("adb -s " + device + " uninstall " + apk_name)
         
 
 if __name__ == "__main__":
