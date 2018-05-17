@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 #-*-coding:utf-8-*-
-import devicefinder
-import apkrunner
-import apkinstaller
-from lib.runprocess import *
+from android import devicefinder
+from android import apkrunner
+from android import apkinstaller
+from lib import runprocess
 import os
-import screencap
+import android.screencap
 import shutil
 
 #-----------colorama---------------
@@ -45,7 +45,7 @@ if __name__ == "__main__":
             device_finder.find_device_list()
 
             for device in device_finder.find_list :
-                RunProcessWait("adb -s " + device + " logcat -c")
+                runprocess.RunProcessWait("adb -s " + device + " logcat -c")
             apk_runner.time_limit = 10
             apk_runner.time_wait = 3
             apk_runner.apk_running()
@@ -71,14 +71,14 @@ if __name__ == "__main__":
                     print(Fore.CYAN + Back.MAGENTA + Style.BRIGHT + "LOG FILE ::: " + apk_runner.temp_path + file_head + str(count) + file_tail + Fore.RESET + Back.RESET + Style.NORMAL)
 
                     os.system("adb -s " + device + " logcat -d > " + apk_runner.temp_path + file_head + str(count) + file_tail)
-                    RunProcessWait("adb -s " + device + " logcat -d > " + apk_runner.temp_path + file_head + str(count) + file_tail)
-                    screen_cap = screencap.ScreenCap()
+                    runprocess.RunProcessWait("adb -s " + device + " logcat -d > " + apk_runner.temp_path + file_head + str(count) + file_tail)
+                    screen_cap = android.screencap.ScreenCap()
                     screen_cap.non_stop_screen_shot(device, apk_runner.temp_path, file_head + str(count) + png_tail)
 
 
             for device in apk_runner.device_finder.find_list :
                 print(Fore.CYAN + Back.MAGENTA + Style.BRIGHT + "ONE STEP" + Fore.RESET + Back.RESET + Style.NORMAL)
-                RunProcessWait("adb -s " + device + " shell am force-stop " + apk_runner.apk_name)
+                runprocess.RunProcessWait("adb -s " + device + " shell am force-stop " + apk_runner.apk_name)
                 #ce0416041472263c01
                 #if os.path.isdir(apk_runner.temp_path + "2165c1582b017ece") :
                     #shutil.rmtree(apk_runner.temp_path + "2165c1582b017ece")

@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 #-*-coding:utf-8-*-
 
-from subprocess import *
-import os
 import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
+from subprocess import *
 #import shutil
 import config
 from lib import option

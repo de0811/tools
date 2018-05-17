@@ -3,8 +3,11 @@
 
 #실행 , 종료 시키는 걸로 시간도 잴까? 시간도 재자
 import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
 import threading
-from lib.androidinfo import *
+from lib import androidinfo
 from lib import option
 import maapt
 
@@ -83,10 +86,10 @@ class DeviceFinder :
             self.model_list.append(arg)
     
     def find_device_list(self) :
-        all_device_list = DeviceList()
+        all_device_list = androidinfo.DeviceList()
 
         for device in all_device_list.devices :
-            self.device_dict.setdefault(device, DeviceInfo(device))
+            self.device_dict.setdefault(device, androidinfo.DeviceInfo(device))
 
         #모든 기기 목록 추출
         if len(self.sdk_ver_list) == 0 and \

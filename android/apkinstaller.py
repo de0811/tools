@@ -3,8 +3,14 @@
 
 #실행 , 종료 시키는 걸로 시간도 잴까? 시간도 재자
 import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
 import threading
-from lib.androidinfo import *
+import time
+from lib import runprocess
+#from lib.androidinfo import *
+from lib import androidinfo
 from lib import option
 from lib import logs
 import maapt
@@ -44,7 +50,7 @@ class ApkInstaller :
    
     def __os_6_under(self, apk, device) :
         tmp_out_line = list()
-        out_line = RunProcessOut("adb -s " + device + " install " + apk)
+        out_line = runprocess.RunProcessOut("adb -s " + device + " install " + apk)
         for line in out_line :
             line = line.decode("UTF-8").strip()
             tmp_out_line.append(line)
@@ -56,7 +62,7 @@ class ApkInstaller :
 
     def __os_6_upper(self, apk, device) :
         tmp_out_line = list()
-        out_line = RunProcessOut("adb -s " + device + " install -r -g " + apk)
+        out_line = runprocess.RunProcessOut("adb -s " + device + " install -r -g " + apk)
         for line in out_line :
             line = line.decode("UTF-8").strip()
             tmp_out_line.append(line)
@@ -84,7 +90,7 @@ class ApkInstaller :
         #mFocused
         while True :
             time.sleep(1)
-            dumpsys_window = DumpsysWindow(device)
+            dumpsys_window = androidinfo.DumpsysWindow(device)
             print (dumpsys_window.mFocused)
             if dumpsys_window.mFocused.find("""com.android.packageinstaller/com.android.packageinstaller.PackageInstallerActivity""") != -1 :
                 break
@@ -98,10 +104,10 @@ class ApkInstaller :
                 if bCheck == True :
                     return
         #Button Click
-        device_ui_info = DeviceUIInfo()
+        device_ui_info = androidinfo.DeviceUIInfo()
         device_ui_info.window_point_parsing(device, dumpsys_window.app_size_x, dumpsys_window.app_size_y)
         resource_info = device_ui_info.search_clickable_resource_id("com.android.packageinstaller:id/ok_button")
-        RunProcessWait("adb -s " + device + " shell input tap " + \
+        runprocess.RunProcessWait("adb -s " + device + " shell input tap " + \
             str(resource_info.x1 + ((resource_info.x2 - resource_info.x1) / 2)) + " " + \
             str(resource_info.y1 + ((resource_info.y2 - resource_info.y1)/2)))
 
@@ -109,7 +115,7 @@ class ApkInstaller :
     
     def apk_install_check(self, device, apk_name) :
         while(True) :
-            apk_list = RunProcessOut("adb -s " + device + " shell pm list package -f | grep " + apk_name)
+            apk_list = runprocess.RunProcessOut("adb -s " + device + " shell pm list package -f | grep " + apk_name)
             if len(apk_list) <= 0 :
                 time.sleep(1)
             else :
@@ -138,7 +144,7 @@ class ApkInstaller :
             print ("Process Count :: " + str(len(self.device_finder.find_list)))
             with ProcessPoolExecutor(max_workers=len(self.device_finder.find_list)) as exe:
                 for device in self.device_finder.find_list :
-                    RunProcessWait("adb -s " + device + " shell pm uninstall " + apk_name)
+                    runprocess.RunProcessWait("adb -s " + device + " shell pm uninstall " + apk_name)
 
                     if self.device_finder.device_dict.get(device).manufacturer == "Xiaomi" :
                         exe.submit(self.mi_device_install, apk, device)
@@ -149,6 +155,7 @@ class ApkInstaller :
                 exe.shutdown(wait=True)
             #####################################################
         
+
         for device in self.device_finder.find_list :
             self.apk_install_check(device, apk_name)
             self.device_logs.prints(device)
@@ -170,7 +177,7 @@ class ApkInstaller :
         apk_name = aapt.package_name
 
         for device in self.device_finder.find_list :
-            RunProcessWait("adb -s " + device + " uninstall " + apk_name)
+            runprocess.RunProcessWait("adb -s " + device + " uninstall " + apk_name)
         
 
 if __name__ == "__main__":
